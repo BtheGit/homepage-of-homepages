@@ -1,114 +1,67 @@
 import { useEffect, useState, useRef } from "react";
-import { loadImageAsync, drawScaledImage } from "../../utils/image";
+import {
+  loadImageAsync,
+  drawScaledImage,
+  drawBlendedScaledImages,
+} from "../../utils/image";
+import { shuffle } from "../../utils/array";
 import "./ImageFader.scss";
 
+// NOTE: This was fun. But probably very suboptimal. Would make more sense to blend images with layers. Maybe without canvas at all and just using image elements. I did reinvent the wheel here. Also, many other transitions, like wipes, can probably be done with css masking. But anyway... MVP :)
+
 export type ImageFaderProps = {
-  srcPaths: string[];
+  images: HTMLImageElement[] | null;
+  className?: string;
+  fps?: number;
+  transitionStep?: number; // Clamped to 0.001 - 0.999
+  looping?: boolean;
+  startDelay?: number;
+  transitionDelay?: number;
+  // Because the initial array can already be randomized, this is insinuatin randomizing on each new loop.
+  reshuffle?: boolean;
+  // TODO:
+  // - Option to rerandomize after each pass
+  // - Timeout for next image
+  // - FPS
+  // - Step
+  // - Easing (might want a library for this though (framer-motion?))
+  // - Transition style - maybe not just fade one day. Wipes, star wipes...
+  // - Infinite (looping or not)
+  // - Start timeout
+  // Allow randomization for timeout and step.
+  // Allow increasing or decreasing step over the course of a full cycle? (Easing across more than one transition)
+  // Need to handle just two images. Think my logic might not?
 };
 
 export const ImageFader = (props: ImageFaderProps) => {
-  const [images, setImages] = useState<HTMLImageElement[] | null>(null);
+  const {
+    images,
+    className,
+    fps = 60,
+    startDelay = 0,
+    transitionStep = 0.005,
+    transitionDelay = 2000,
+    looping = true,
+    reshuffle = false,
+  } = props;
   const canvasRef = useRef(null);
   const frameRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    const loadImages = async (paths: string[]) => {
-      // TODO: allow the images to load at any rate
-      const results = await Promise.allSettled(paths.map(loadImageAsync));
-      const fulfilled = results
-        .filter((result) => result.status === "fulfilled")
-        .map(
-          (result) => (result as PromiseFulfilledResult<HTMLImageElement>).value
-        );
-
-      setImages(fulfilled);
-    };
-
-    loadImages(props.srcPaths);
-  }, []);
-
-  // TODO: Move one level down so we know we have images before we do any of this.
   useEffect(() => {
     const canvas: HTMLCanvasElement | null = canvasRef.current;
     // So we don't call the transition more than once
     let nextImageStartTimeout: null | number = null;
 
-    if (!images) {
+    // No point in running this with only one image. Wasteful.
+    if (!images?.length || images?.length < 2) {
       return;
     }
 
     if (canvas) {
-      // NOTE: Normally I want to target the parent so this is agnostic. But the astro islands architecture means we'd need to go one level up.
+      // Not being used
+      // const ctx = (canvas as HTMLCanvasElement).getContext("2d", { alpha: false })!;
       // @ts-expect-error
-      const parent: HTMLElement = (canvas as HTMLCanvasElement).parentNode!
-        .parentNode!;
-      const width = parent.clientWidth;
-      const height = parent.clientHeight;
-      (canvas as HTMLCanvasElement).width = width;
-      (canvas as HTMLCanvasElement).height = height;
-
-      // TODO: The following lines should be in the stylesheet
-      // (canvas as HTMLCanvasElement).style.position = "absolute";
-      // (canvas as HTMLCanvasElement).style.top = "0";
-      // (canvas as HTMLCanvasElement).style.left = "0";
-      // (canvas as HTMLCanvasElement).style.zIndex = "-1";
-      // (canvas as HTMLCanvasElement).style.background = "none";
-
-      const ctx = (canvas as HTMLCanvasElement).getContext("2d")!;
-
-      // https://jakearchibald.com/2021/dom-cross-fade/
-      const drawBlendedScaledImages = (
-        img1: HTMLImageElement,
-        img2: HTMLImageElement,
-        mix: number
-      ) => {
-        ctx.clearRect(0, 0, width, height);
-
-        ctx.globalCompositeOperation = "source-over";
-        ctx.globalAlpha = 1 - mix;
-        drawScaledImage(img1, canvas!, ctx);
-        ctx.globalCompositeOperation = "lighter";
-        ctx.globalAlpha = mix;
-        drawScaledImage(img2, canvas!, ctx);
-      };
-
-      let previousTime = 0;
-      const MAX_FPS = 60;
-
-      let blendRatio = 1;
-
-      let currentIndex = 0;
-      let currentImg = images[currentIndex];
-      let nextImg = images[currentIndex + 1];
-
-      const animate = (currentTime: number) => {
-        frameRef.current = requestAnimationFrame(animate);
-        if (currentTime - previousTime < 1000 / MAX_FPS) return;
-
-        previousTime = currentTime;
-        if (blendRatio >= 0.0) {
-          drawBlendedScaledImages(nextImg, currentImg, blendRatio);
-          blendRatio -= 0.005;
-        } else {
-          if (!nextImageStartTimeout) {
-            const startNewBlend = () => {
-              clearTimeout(nextImageStartTimeout ?? 0);
-              nextImageStartTimeout = null;
-              // Now that a fade has finished, we want to change the target picture. But we also want a delay.
-              // 1. Set the currentImg to the nextImg.
-              // 2. Set the nextImg to the next index in images (or back to 1 if we're at the end) (This is a loop now, we'll do random later)
-              currentImg = nextImg;
-              let nextIndex = currentIndex + 1;
-              blendRatio = 1;
-              nextIndex = nextIndex >= images.length - 2 ? 0 : nextIndex;
-              nextImg = images[nextIndex];
-              currentIndex = nextIndex;
-            };
-
-            nextImageStartTimeout = setTimeout(startNewBlend, 2000);
-          }
-        }
-      };
+      const parent: HTMLElement = (canvas as HTMLCanvasElement).parentNode!;
 
       function resizeCanvas() {
         (canvas as HTMLCanvasElement).width = parent.clientWidth;
@@ -117,13 +70,70 @@ export const ImageFader = (props: ImageFaderProps) => {
 
       resizeCanvas();
 
+      // If we are randomizing, we'll be mucking with the order of the images on each pass. But we don't wan't to confuse our useEffect dependency. So we'll suffer one more array in memory. (Thankfully, unless someone is very very stupid, it's just a second array of references less than a few hundred at the absolute most. So miniscule in memory...).
+      // This leaves me with a problem
+      let workingImages = images;
+      let currentImageIndex = 0;
+      let currentImg = workingImages[currentImageIndex];
+      let nextImg = workingImages[currentImageIndex + 1];
+
+      let previousTime = 0;
+      let blendRatio = 1;
+
+      const animate = (currentTime: number) => {
+        frameRef.current = requestAnimationFrame(animate);
+        if (currentTime - previousTime < 1000 / fps) return;
+
+        previousTime = currentTime;
+        if (blendRatio >= 0.0) {
+          drawBlendedScaledImages(canvas, nextImg, currentImg, blendRatio);
+          blendRatio -= transitionStep;
+        } else {
+          cancelAnimationFrame(frameRef.current);
+          clearTimeout(nextImageStartTimeout ?? 0);
+          nextImageStartTimeout = null;
+          // Now that a fade has finished, we want to change the target picture. But we also want a delay.
+          // 1. Set the currentImg to the nextImg.
+          // 2. Set the nextImg to the next index in images (or back to 1 if we're at the end) (This is a loop now, we'll do random later)
+          currentImg = nextImg;
+          let nextImageIndex = (currentImageIndex + 1) % workingImages.length;
+
+          // We've done one loop. Time to peace out.
+          if (nextImageIndex === 0) {
+            if (!looping) {
+              return;
+            }
+
+            if (reshuffle) {
+              workingImages = shuffle(workingImages);
+            }
+          }
+
+          blendRatio = 1;
+          nextImg = workingImages[nextImageIndex];
+          currentImageIndex = nextImageIndex;
+
+          nextImageStartTimeout = setTimeout(() => {
+            frameRef.current = requestAnimationFrame(animate);
+          }, transitionDelay);
+        }
+      };
+
       const observer = new ResizeObserver(() => {
         resizeCanvas();
       });
-      observer.observe(parent);
+
+      // Before we do anything. We want to draw the initial image to the screen so that a startDelay isn't a blank canvas (we can achieve that already by just delaying the rendering of the component itself)
+      // Now, if someone resizes the screen while the animation hasn't started, well, that's a bit of a different issue...
+      resizeCanvas();
+      drawScaledImage(currentImg, canvas!);
 
       const init = async () => {
-        frameRef.current = requestAnimationFrame(animate);
+        setTimeout(() => {
+          // TODO: Having issues with the observer clearing the static initial image. Moving it here fixed that but caused blitting. Need to sort out. FOr now, don't resize the page mister!
+          // observer.observe(parent);
+          frameRef.current = requestAnimationFrame(animate);
+        }, startDelay);
       };
 
       init();
@@ -140,7 +150,10 @@ export const ImageFader = (props: ImageFaderProps) => {
 
   return (
     <>
-      <canvas ref={canvasRef} className="fader-canvas"></canvas>
+      <canvas
+        ref={canvasRef}
+        className={`fader-canvas ${className ? className : ""}`}
+      ></canvas>
     </>
   );
 };

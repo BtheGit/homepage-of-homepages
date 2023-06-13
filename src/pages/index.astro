@@ -1,7 +1,7 @@
 ---
-import { ImageFader } from "../components/ImageFader/ImageFader";
+import { PhotoArray } from "../components/PhotoArray/PhotoArray";
 import "the-new-css-reset/css/reset.css";
-const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/*')).map(file => file.default)
+const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*')).map(file => file.default)
 ---
 
 <html lang="en">
@@ -13,48 +13,13 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/*')).map(file =>
 		<title>Astro</title>
 	</head>
 	<body>
-		<div class="canvas-containers">
-			<div class="canvas-container">
-				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
-
-			</div>
-			<div class="canvas-container">
-				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
-
-			</div>
-			<div class="canvas-container">
-				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
-
-			</div>
-			<div class="canvas-container">
-				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
-
-			</div>
-			<div class="canvas-container">
-				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
-
-			</div>
-			<div class="canvas-container">
-				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
-
-			</div>
-			<div class="canvas-container">
-				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
-
-			</div>
-			<div class="canvas-container">
-				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
-
-			</div>
-			<div class="canvas-container">
-				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
-
-			</div>
-
-
+		<div class="bfa-container">
+			<PhotoArray client:only srcPaths={umbrellaImagePaths} />
 		</div>
 		<main>
-			<h1 class="profile-name">Brendan Beltz</h1>
+			<div class="profile">
+				<h1 class="profile-name">Brendan Beltz</h1>
+			</div>
 		</main>
 	</body>
 </html>
@@ -65,6 +30,10 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/*')).map(file =>
 		width: 100%;
 	}
 
+	body {
+		background: black;
+	}
+
 	main {
 		background: none;
 		display: flex;
@@ -72,31 +41,42 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/*')).map(file =>
 		align-items: center;
 	}
 
-	.profile-name {
-		color: white;
-		font-size: 60px;
-	}
 
-	.canvas-containers {
+	.bfa-container {
 		position: absolute;
 		height: 100%;
 		width: 100%;
-		display: grid;
-		grid-template: 1fr 3fr 1fr /  1fr 3fr 1fr;
-		background: white;
 		top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0;
-		z-index: -1;
+		/* z-index: -1; */
 		overflow: hidden;
 	}
 
-	.canvas-container {
-		position: relative;
+
+	
+	/* https://zellwk.com/blog/overcoming-astro-styling-frustrations/ */
+
+	.profile {
+		pointer-events: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		/* background: radial-gradient( rgba(0, 0, 0, 0.4) 0%, transparent 30%, transparent 100%); */
 	}
 
-	.canvas-container:nth-child(5){
-		filter: saturate(0) brightness(0.3);
+	.profile-name {
+		color: white;
+		font-size: 10vw;
+		text-align: center;
+		text-shadow: 0 0 3px black;
+		filter: drop-shadow(0 0 10px rgba(0,0,0,1)) drop-shadow(0 0 20px rgba(0,0,0,1));
 	}
+
 </style>
