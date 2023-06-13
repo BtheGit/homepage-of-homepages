@@ -1,7 +1,7 @@
 ---
 import { PhotoArray } from "../components/PhotoArray/PhotoArray";
 import "the-new-css-reset/css/reset.css";
-const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*')).map(file => file.default)
+const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jpg')).map(file => file.default)
 ---
 
 <html lang="en">
