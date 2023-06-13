@@ -1,4 +1,7 @@
 ---
+import { ImageFader } from "../components/ImageFader/ImageFader";
+import "the-new-css-reset/css/reset.css";
+const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/*')).map(file => file.default)
 ---
 
 <html lang="en">
@@ -10,6 +13,90 @@
 		<title>Astro</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<div class="canvas-containers">
+			<div class="canvas-container">
+				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
+
+			</div>
+			<div class="canvas-container">
+				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
+
+			</div>
+			<div class="canvas-container">
+				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
+
+			</div>
+			<div class="canvas-container">
+				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
+
+			</div>
+			<div class="canvas-container">
+				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
+
+			</div>
+			<div class="canvas-container">
+				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
+
+			</div>
+			<div class="canvas-container">
+				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
+
+			</div>
+			<div class="canvas-container">
+				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
+
+			</div>
+			<div class="canvas-container">
+				<ImageFader client:load srcPaths={umbrellaImagePaths}/>
+
+			</div>
+
+
+		</div>
+		<main>
+			<h1 class="profile-name">Brendan Beltz</h1>
+		</main>
 	</body>
 </html>
+
+<style>
+	html, body, main {
+		height: 100%;
+		width: 100%;
+	}
+
+	main {
+		background: none;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.profile-name {
+		color: white;
+		font-size: 60px;
+	}
+
+	.canvas-containers {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		display: grid;
+		grid-template: 1fr 3fr 1fr /  1fr 3fr 1fr;
+		background: white;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: -1;
+		overflow: hidden;
+	}
+
+	.canvas-container {
+		position: relative;
+	}
+
+	.canvas-container:nth-child(5){
+		filter: saturate(0) brightness(0.3);
+	}
+</style>
