@@ -10,7 +10,10 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+		<title>Brendan Beltz: A Web Developing Brendan Of All Time</title>
 	</head>
 	<body>
 		<div class="bfa-container">
@@ -69,14 +72,17 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		justify-content: center;
 		align-items: center;
 		/* background: radial-gradient( rgba(0, 0, 0, 0.4) 0%, transparent 30%, transparent 100%); */
+		background: linear-gradient(transparent,  transparent 30%, rgba(81, 0, 81, 0.4) 40%, rgba(0, 10, 120, 0.4) 60%, transparent 70%, transparent);
 	}
 
 	.profile-name {
 		color: white;
+		font-family: 'Bangers', cursive;
 		font-size: 10vw;
 		text-align: center;
 		text-shadow: 0 0 3px black;
-		filter: drop-shadow(0 0 10px rgba(0,0,0,1)) drop-shadow(0 0 20px rgba(0,0,0,1));
+		filter: drop-shadow(0 0 10px rgba(0,0,0,1)) drop-shadow(0 0 20px rgba(0,0,0,.4));
+		/* filter: drop-shadow(0 0 10px rgba(0,0,0,1)); */
 	}
 
 </style>
