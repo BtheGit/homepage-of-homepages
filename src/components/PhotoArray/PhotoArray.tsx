@@ -10,7 +10,6 @@ export type PhotoArrayProps = {
 export const PhotoArray = (props: PhotoArrayProps) => {
   const { srcPaths } = props;
   const [imageLoadingState, images] = useLoadImagesFromPaths(srcPaths);
-  // TODO: Pull in original photo separately to have as initial image.
 
   if (imageLoadingState !== "loaded" || !images?.length) return null;
 
@@ -47,8 +46,11 @@ export const PhotoArray = (props: PhotoArrayProps) => {
       </div>
       <div className="bfa-canvas-container splash">
         <ImageFader
-          images={images.slice(0, 2)}
-          startDelay={1000}
+          images={[...shuffle(images)].slice(0, 20)}
+          startDelay={0}
+          transitionDelay={0}
+          fps={30}
+          transitionStep={0.1}
           looping={false}
         />
       </div>
