@@ -16,7 +16,7 @@
   background-image: url('/public/umbrella/umbrella-profile-md.jpg');
   background-size: cover;
   // The following matches with the emulated cover effect in the scaled canvas image draw.
-  background-position: left;
+  background-position: center;
 
   &:not(.splash):hover {
     // filter: hue-rotate(90deg);
