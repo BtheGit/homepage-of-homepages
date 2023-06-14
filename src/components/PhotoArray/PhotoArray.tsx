@@ -13,7 +13,7 @@ export const PhotoArray = (props: PhotoArrayProps) => {
 
   if (imageLoadingState !== "loaded" || !images?.length) return null;
 
-  // NOTE: Resize isnt working. Might want to brute force and just rerender this component on resizes.
+  // NOTE: Resize isnt working perfectly. Might want to brute force and just rerender this component on resizes.
 
   return (
     <div className="bfa-container__inner">
