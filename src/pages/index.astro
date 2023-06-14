@@ -1,6 +1,7 @@
 ---
 import { PhotoArray } from "../components/PhotoArray/PhotoArray";
 import "the-new-css-reset/css/reset.css";
+
 const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jpg')).map(file => file.default)
 ---
 
@@ -12,7 +13,7 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		<meta name="generator" content={Astro.generator} />
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Cutive&display=swap" rel="stylesheet">
 		<title>Brendan Beltz: A Web Developing Brendan Of All Time</title>
 	</head>
 	<body>
@@ -20,8 +21,42 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 			<PhotoArray client:only srcPaths={umbrellaImagePaths} />
 		</div>
 		<main>
-			<div class="profile">
+			<div class="profile" id="profile-container">
+				<div class="nav-container"></div>
 				<h1 class="profile-name">Brendan Beltz</h1>
+				<div class="typewriter-container" id="typewriter-container"></div>
+				<script>
+					import Typewriter from 'typewriter-effect/dist/core';
+					const initTypewriter = () => {
+						const loopDelay = 2000, typingSpeed = 60, deleteSpeed = 30;
+						const typewriterContainer = document.querySelector('#typewriter-container');
+						const typewriter = new Typewriter(typewriterContainer, {
+							loop: true,
+							delay: typingSpeed,
+							cursor: '|',
+						});
+						const texts = [
+							'A Web Developing Brendan of all time.<br/>Mostly harmless.<br/>Occasionally effective.<br/>Always styling!',
+							'Putting the fun back in dysfunctional programming.',
+							'The future author of Javascript: The Gooey Parts', 
+							'You wont catch me not styling, I keep it sassy!',
+							'Bringing design and code together, one bugfix ticket at a time.',
+							'The type errors aren\'t my fault. I was being coerced.',
+							'I knew I was a real programmer when I finally got arrays.',
+							'Time is an illusion. Crunchtime doubly so.',
+						];
+						texts.forEach((text, index) => {
+							typewriter
+								.typeString(text) // Type the current text
+								.pauseFor(2000) // Pause after typing the text
+								.deleteAll(deleteSpeed) // Delete the text
+								.pauseFor(500) // Pause after erasing the text
+								.start();
+						});
+					}
+					const parentElement = document.querySelector('#profile-container');
+					parentElement.addEventListener('animationend', initTypewriter)
+				</script>
 			</div>
 		</main>
 	</body>
@@ -69,6 +104,7 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		right: 0;
 		bottom: 0;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		/* background: radial-gradient( rgba(0, 0, 0, 0.4) 0%, transparent 30%, transparent 100%); */
@@ -89,7 +125,12 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		}
 	}
 
+	.nav-container, .typewriter-container {
+		height: 35%;
+	}
+
 	.profile-name {
+		display: block;
 		color: white;
 		font-family: 'Bangers', cursive;
 		font-size: 10vmax;
@@ -98,6 +139,16 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		text-shadow: 0 0 3px black;
 		filter: drop-shadow(0 0 10px rgba(0,0,0,1)) drop-shadow(0 0 20px rgba(0,0,0,.4));
 		/* filter: drop-shadow(0 0 10px rgba(0,0,0,1)); */
+	}
+
+	.typewriter-container {
+		display: block;
+		color: white;
+		font-family: 'Cutive', serif;
+		font-size: 3vmax;
+		text-shadow: 0 0 2px black;
+		text-align: center;
+		padding: 0 10vw;
 	}
 
 </style>
