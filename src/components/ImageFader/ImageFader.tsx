@@ -131,7 +131,7 @@ export const ImageFader = (props: ImageFaderProps) => {
       const init = async () => {
         setTimeout(() => {
           // TODO: Having issues with the observer clearing the static initial image. Moving it here fixed that but caused blitting. Need to sort out. FOr now, don't resize the page mister!
-          // observer.observe(parent);
+          observer.observe(parent);
           frameRef.current = requestAnimationFrame(animate);
         }, startDelay);
       };
