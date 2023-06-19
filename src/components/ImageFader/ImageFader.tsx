@@ -19,6 +19,7 @@ export type ImageFaderProps = {
   transitionDelay?: number;
   // Because the initial array can already be randomized, this is insinuatin randomizing on each new loop.
   reshuffle?: boolean;
+  scale?: number;
   // TODO:
   // - Option to rerandomize after each pass
   // - Timeout for next image
@@ -43,6 +44,7 @@ export const ImageFader = (props: ImageFaderProps) => {
     transitionDelay = 2000,
     looping = true,
     reshuffle = false,
+    scale = 3,
   } = props;
   const canvasRef = useRef(null);
   const frameRef = useRef<number | null>(null);
@@ -126,7 +128,7 @@ export const ImageFader = (props: ImageFaderProps) => {
       // Before we do anything. We want to draw the initial image to the screen so that a startDelay isn't a blank canvas (we can achieve that already by just delaying the rendering of the component itself)
       // Now, if someone resizes the screen while the animation hasn't started, well, that's a bit of a different issue...
       resizeCanvas();
-      drawScaledImage(currentImg, canvas!);
+      drawScaledImage(currentImg, canvas!, scale);
 
       const init = async () => {
         setTimeout(() => {

@@ -14,13 +14,14 @@ export const loadImageAsync = (url: string): Promise<HTMLImageElement> => {
 // https://stackoverflow.com/questions/66560704/adjust-canvas-image-size-like-background-size-cover-and-responsive
 export const drawScaledImage = (
   image: HTMLImageElement,
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
+  scale = 1
 ) => {
   const iw = image.width;
   const ih = image.height;
   const cw = canvas.width;
   const ch = canvas.height;
-  const f = Math.max(cw / iw, ch / ih);
+  const f = Math.max(cw / iw, ch / ih) * scale;
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas#turn_off_transparency
   const ctx = (canvas as HTMLCanvasElement).getContext("2d", { alpha: false })!;
