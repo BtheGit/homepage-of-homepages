@@ -1,3 +1,5 @@
+// Strong guidance from https://codepen.io/Valgo/pen/PowZaNY
+
 export const createSVGFilter = (filterId = "text-morpher-matrix-filter") => {
   const SVG_NS = "http://www.w3.org/2000/svg";
   const svgElement = document.createElementNS(SVG_NS, "svg");
