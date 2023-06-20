@@ -3,6 +3,7 @@ import { PhotoArray } from "../components/PhotoArray/PhotoArray";
 import "the-new-css-reset/css/reset.css";
 
 const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jpg')).map(file => file.default)
+
 ---
 
 <html lang="en">
@@ -13,7 +14,7 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		<meta name="generator" content={Astro.generator} />
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Cutive&display=swap" rel="stylesheet">
+		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Bangers&family=Cutive&display=swap" rel="stylesheet">
 		<title>Brendan Beltz: A Web Developing Brendan Of All Time</title>
 	</head>
 	<body>
@@ -24,38 +25,25 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 			<div class="profile" id="profile-container">
 				<div class="nav-container"></div>
 				<h1 class="profile-name">Brendan Beltz</h1>
-				<div class="typewriter-container" id="typewriter-container"></div>
+				<div id="text-cross-fader" class="text-cross-fader">
+				</div>
 				<script>
-					import Typewriter from 'typewriter-effect/dist/core';
-					const initTypewriter = () => {
-						const loopDelay = 2000, typingSpeed = 60, deleteSpeed = 30;
-						const typewriterContainer = document.querySelector('#typewriter-container');
-						const typewriter = new Typewriter(typewriterContainer, {
-							loop: true,
-							delay: typingSpeed,
-							cursor: '|',
-						});
-						const texts = [
-							'A Web Developing Brendan of all time.<br/>Mostly harmless.<br/>Occasionally effective.<br/>Always styling!',
-							'Putting the fun back in dysfunctional programming.',
-							'The future author of Javascript: The Gooey Parts', 
-							'You wont catch me not styling, I keep it sassy!',
-							'Bringing design and code together, one bugfix ticket at a time.',
-							'The type errors aren\'t my fault. I was being coerced.',
-							'I knew I was a real programmer when I finally got arrays.',
-							'Time is an illusion. Crunchtime doubly so.',
-						];
-						texts.forEach((text, index) => {
-							typewriter
-								.typeString(text) // Type the current text
-								.pauseFor(2000) // Pause after typing the text
-								.deleteAll(deleteSpeed) // Delete the text
-								.pauseFor(500) // Pause after erasing the text
-								.start();
-						});
-					}
+					import { initTextMorpher } from '../components/textMorpher.ts';
+					const loopDelay = 2000, typingSpeed = 60, deleteSpeed = 30;
+					const texts = [
+						'Putting the fun back in dysfunctional programming.',
+						'The future author of Javascript: The Gooey Parts', 
+						'You wont catch me not styling, I keep it sassy!',
+						'Bringing design and code together, one bugfix ticket at a time.',
+						'The type errors aren\'t my fault. I was being coerced.',
+						'I knew I was a real programmer when I finally got arrays.',
+						'Time is an illusion. Crunchtime doubly so.',
+						'A Web Developing Brendan of all time.<br/>Mostly harmless.<br/>Occasionally effective.<br/>Always styling!',
+					];
 					const parentElement = document.querySelector('#profile-container');
-					parentElement.addEventListener('animationend', initTypewriter)
+					parentElement!.addEventListener('animationend', () => {
+						initTextMorpher(document.querySelector('#text-cross-fader'), texts)
+					})
 				</script>
 			</div>
 		</main>
@@ -125,7 +113,7 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		}
 	}
 
-	.nav-container, .typewriter-container {
+	.nav-container, .typewriter-container, .text-cross-fader {
 		height: 35%;
 	}
 
@@ -141,15 +129,21 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		/* filter: drop-shadow(0 0 10px rgba(0,0,0,1)); */
 	}
 
-	.typewriter-container {
-		display: block;
+	
+</style>
+<style is:global>
+	#text-cross-fader {
+		position: relative;
+		width: 100%;
+	}
+	
+	#text-cross-fader > span {
+		padding: 0 10vw;
 		color: white;
-		font-family: 'Cutive', serif;
 		font-size: 3vmax;
+		font-family: 'Cutive', serif;
 		text-shadow: 0 0 2px black;
 		text-align: center;
-		padding: 0 10vw;
-		filter: drop-shadow(0 0 5px rgba(0,10,120,0.8));
 	}
 
 </style>
