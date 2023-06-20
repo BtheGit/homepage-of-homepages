@@ -14,6 +14,7 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		<meta name="generator" content={Astro.generator} />
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<!-- https://css-tricks.com/how-to-load-fonts-in-a-way-that-fights-fout-and-makes-lighthouse-happy/ -->
 		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Bangers&family=Cutive&display=swap" rel="stylesheet">
 		<title>Brendan Beltz: A Web Developing Brendan Of All Time</title>
 	</head>
@@ -135,6 +136,7 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 	#text-cross-fader {
 		position: relative;
 		width: 100%;
+		opacity: 0;
 	}
 	
 	#text-cross-fader > span {
@@ -144,6 +146,11 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		font-family: 'Cutive', serif;
 		text-shadow: 0 0 2px black;
 		text-align: center;
+	}
+
+	.fade-in-1s {
+		opacity: 1 !important;
+		transition: opacity 2s ease-in;
 	}
 
 </style>

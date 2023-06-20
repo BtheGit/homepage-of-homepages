@@ -29,6 +29,7 @@ export const initTextMorpher = async (
   parentElement.appendChild(createSVGFilter(filterId));
   // TODO: This drop shadow is very custom to my use case, not great for a generic implementation (also I removed the .6px blur)
   parentElement.style.filter = `url(#${filterId}) drop-shadow(0 0 5px rgba(0,10,120,0.8))`;
+  parentElement.classList.add("fade-in-1s");
 
   const textContainer1 = document.createElement("span");
   textContainer1.id = "#text-cross-fader-text-1";
