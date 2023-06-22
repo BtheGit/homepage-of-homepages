@@ -39,7 +39,9 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 						'I knew I was a real programmer when I finally got arrays.',
 						'You wont catch me not styling, I keep it sassy!',
 						'Bringing design and code together, one bugfix ticket at a time.',
-						'A Web Developing Brendan of all time.<br/>Mostly harmless.<br/>Occasionally effective.<br/>Always styling!',
+						'A Web Developing Brendan of all time.',
+						'Mostly harmless.<br/>Occasionally effective.<br/>Always styling!',
+						'Irritatingly cheerful in the morning.',
 					];
 					const parentElement = document.querySelector('#profile-container');
 					parentElement!.addEventListener('animationend', () => {
@@ -133,6 +135,11 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 	
 </style>
 <style is:global>
+
+	em {
+		font-style: italic;
+	}
+
 	#text-cross-fader {
 		position: relative;
 		width: 100%;
