@@ -24,7 +24,13 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		</div>
 		<main>
 			<div class="profile" id="profile-container">
-				<div class="nav-container"></div>
+				<div class="nav-container">
+					<div class="nav-bar">
+						<a href="https://www.linkedin.com/in/brendanbeltz/" target="_blank"><ion-icon name="logo-linkedin"></ion-icon></a>
+						<a href="https://github.com/BtheGit" target="_blank"><ion-icon name="logo-github"></ion-icon></a>
+						<a href="mailto:brendanbeltz@gmail.com"><ion-icon name="at-circle-sharp"></ion-icon></a>
+					</div>
+				</div>
 				<h1 class="profile-name">Brendan Beltz</h1>
 				<div id="text-cross-fader" class="text-cross-fader">
 				</div>
@@ -54,6 +60,7 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 			</div>
 		</main>
 	</body>
+	<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 </html>
 
 <style>
@@ -86,6 +93,29 @@ const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jp
 		overflow: hidden;
 	}
 
+	.nav-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+	}
+
+
+	.nav-bar {
+		display: flex;
+		height: 100px;
+	}
+
+	.nav-bar a {
+		margin: 0 20px;
+		filter: drop-shadow(0 0 5px rgba(0,10,120,0.8));
+		width: 62px;
+		pointer-events: initial;
+	}
+
+	ion-icon {
+		color: white;
+		fill: white;
+	}
 
 	
 	/* https://zellwk.com/blog/overcoming-astro-styling-frustrations/ */

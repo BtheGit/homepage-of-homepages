@@ -22,7 +22,7 @@
         import defaultWad from '../../components/Raymarcher/data/default.wad.ts'
         const width = document.documentElement.clientWidth;
         const height = document.documentElement.clientHeight;
-        WorldEngine({width, height})(defaultWad)
+        WorldEngine({width, height, framerate: (1000 / 60)})(defaultWad)
       </script>
 		</main>
 	</body>
