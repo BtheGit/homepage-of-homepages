@@ -20,16 +20,20 @@
       <script>
         import WorldEngine from 'raymarcher';
         import defaultWad from '../../components/Raymarcher/data/default.wad.ts'
-        WorldEngine()(defaultWad)
+        const width = document.documentElement.clientWidth;
+        const height = document.documentElement.clientHeight;
+        WorldEngine({width, height})(defaultWad)
       </script>
 		</main>
 	</body>
 </html>
 
 <style>
-	html, body, main {
+	html, body, main, canvas {
 		height: 100%;
 		width: 100%;
+    margin: 0;
+    padding: 0;
 	}
 
 	body {
