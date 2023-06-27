@@ -829,6 +829,19 @@ const grid = [
 const sprites = [
   {
     type: "prop",
+    name: "ziggy1",
+    spritesheet: "sprite__stardust",
+    pos: {
+      x: 4.5,
+      y: 4,
+    },
+    isAnimated: false,
+    isMultifaceted: false,
+    isSolid: true,
+    boundingBox: 0.2,
+  },
+  {
+    type: "prop",
     name: "tree1",
     spritesheet: "sprite__tree_1",
     pos: {
