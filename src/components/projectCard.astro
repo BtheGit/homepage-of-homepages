@@ -1,0 +1,14 @@
+---
+const { project } = Astro.props;
+const { Content } = await project.render();
+---
+
+<article>
+  <header>
+    <h2>{project.data.title}</h2>
+    <p>{project.data.description}</p>
+  </header>
+  <section>
+    <Content />
+  </section>
+</article>
