@@ -2,195 +2,223 @@
 import { PhotoArray } from "../components/PhotoArray/PhotoArray";
 import "the-new-css-reset/css/reset.css";
 
-const umbrellaImagePaths =  (await Astro.glob('/public/umbrella/generations/*.jpg')).map(file => file.default)
+export type ImageGlobType = {
+  src: string;
+  width: number;
+  height: number;
+  format: string;
+};
 
+const umbrellaImagePaths = (
+  await Astro.glob("/public/umbrella/generations/*.jpg")
+).map((file) => file.default.src);
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<!-- https://css-tricks.com/how-to-load-fonts-in-a-way-that-fights-fout-and-makes-lighthouse-happy/ -->
-		<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Cutive" rel="stylesheet">
-		<title>Brendan Beltz: A Web Developing Brendan Of All Time</title>
-	</head>
-	<body>
-		<div class="bfa-container">
-			<PhotoArray client:only srcPaths={umbrellaImagePaths} />
-		</div>
-		<main>
-			<div class="profile" id="profile-container">
-				<div class="nav-container">
-					<div class="nav-bar">
-						<a href="https://www.linkedin.com/in/brendanbeltz/" target="_blank"><ion-icon name="logo-linkedin"></ion-icon></a>
-						<a href="https://github.com/BtheGit" target="_blank"><ion-icon name="logo-github"></ion-icon></a>
-						<a href="mailto:brendanbeltz@gmail.com"><ion-icon name="at-circle-sharp"></ion-icon></a>
-					</div>
-				</div>
-				<h1 class="profile-name">Brendan Beltz</h1>
-				<div id="text-cross-fader" class="text-cross-fader">
-				</div>
-				<script>
-					import { initTextMorpher } from '../components/textMorpher.ts';
-					const loopDelay = 2000, typingSpeed = 60, deleteSpeed = 30;
-					const texts = [
-						'Putting the fun back in dysfunctional programming.',
-						'The future author of <em>Javascript: The Gooey Parts</em>', 
-						'The type errors aren\'t my fault. I was being coerced.',
-						'Time is an illusion. Crunchtime doubly so.',
-						'I knew I was a real programmer when I finally got arrays.',
-						'You wont catch me not styling, I keep it sassy!',
-						'Bringing design and code together, one bugfix ticket at a time.',
-						'A Web Developing Brendan of all time.',
-						'Mostly harmless.<br/>Occasionally effective.<br/>Always styling!',
-						'Irritatingly cheerful in the morning.',
-						'A man of many faces, all perfect for radio!',
-						'Please accept these cookies.<br/>Fresh from the backend.',
-
-					];
-					const parentElement = document.querySelector('#profile-container');
-					parentElement!.addEventListener('animationend', () => {
-						initTextMorpher(document.querySelector('#text-cross-fader'), texts)
-					})
-				</script>
-			</div>
-		</main>
-	</body>
-	<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- https://css-tricks.com/how-to-load-fonts-in-a-way-that-fights-fout-and-makes-lighthouse-happy/ -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Cutive"
+      rel="stylesheet"
+    />
+    <title>Brendan Beltz: A Web Developing Brendan Of All Time</title>
+  </head>
+  <body>
+    <div class="bfa-container">
+      <PhotoArray client:only srcPaths={umbrellaImagePaths} />
+    </div>
+    <main>
+      <div class="profile" id="profile-container">
+        <div class="nav-container">
+          <div class="nav-bar">
+            <a href="https://www.linkedin.com/in/brendanbeltz/" target="_blank"
+              ><ion-icon name="logo-linkedin"></ion-icon></a
+            >
+            <a href="https://github.com/BtheGit" target="_blank"
+              ><ion-icon name="logo-github"></ion-icon></a
+            >
+            <a href="mailto:brendanbeltz@gmail.com"
+              ><ion-icon name="at-circle-sharp"></ion-icon></a
+            >
+          </div>
+        </div>
+        <h1 class="profile-name">Brendan Beltz</h1>
+        <div id="text-cross-fader" class="text-cross-fader"></div>
+        <script>
+          import { initTextMorpher } from "../components/textMorpher.ts";
+          const loopDelay = 2000,
+            typingSpeed = 60,
+            deleteSpeed = 30;
+          const texts = [
+            "Putting the fun back in dysfunctional programming.",
+            "The future author of <em>Javascript: The Gooey Parts</em>",
+            "The type errors aren't my fault. I was being coerced.",
+            "Time is an illusion. Crunchtime doubly so.",
+            "I knew I was a real programmer when I finally got arrays.",
+            "You wont catch me not styling, I keep it sassy!",
+            "Bringing design and code together, one bugfix ticket at a time.",
+            "A Web Developing Brendan of all time.",
+            "Mostly harmless.<br/>Occasionally effective.<br/>Always styling!",
+            "Irritatingly cheerful in the morning.",
+            "A man of many faces, all perfect for radio!",
+            "Please accept these cookies.<br/>Fresh from the backend.",
+          ];
+          const parentElement = document.querySelector("#profile-container");
+          parentElement!.addEventListener("animationend", () => {
+            initTextMorpher(
+              document.querySelector("#text-cross-fader")!,
+              texts
+            );
+          });
+        </script>
+      </div>
+    </main>
+  </body>
+  <script
+    type="module"
+    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+  ></script>
 </html>
 
 <style>
-	html, body, main {
-		height: 100%;
-		width: 100%;
-	}
+  html,
+  body,
+  main {
+    height: 100%;
+    width: 100%;
+  }
 
-	body {
-		background: black;
-	}
+  body {
+    background: black;
+  }
 
-	main {
-		background: none;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
+  main {
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
+  .bfa-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* z-index: -1; */
+    overflow: hidden;
+  }
 
-	.bfa-container {
-		position: absolute;
-		height: 100%;
-		width: 100%;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		/* z-index: -1; */
-		overflow: hidden;
-	}
+  .nav-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
 
-	.nav-container {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-end;
-	}
+  .nav-bar {
+    display: flex;
+    height: 100px;
+  }
 
+  .nav-bar a {
+    margin: 0 20px;
+    filter: drop-shadow(0 0 5px rgba(0, 10, 120, 0.8));
+    width: 62px;
+    pointer-events: initial;
+  }
 
-	.nav-bar {
-		display: flex;
-		height: 100px;
-	}
+  ion-icon {
+    color: white;
+    fill: white;
+  }
 
-	.nav-bar a {
-		margin: 0 20px;
-		filter: drop-shadow(0 0 5px rgba(0,10,120,0.8));
-		width: 62px;
-		pointer-events: initial;
-	}
+  /* https://zellwk.com/blog/overcoming-astro-styling-frustrations/ */
 
-	ion-icon {
-		color: white;
-		fill: white;
-	}
+  .profile {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background: radial-gradient( rgba(0, 0, 0, 0.4) 0%, transparent 30%, transparent 100%); */
+    background: linear-gradient(
+      transparent,
+      transparent 30%,
+      rgba(81, 0, 81, 0.4) 40%,
+      rgba(0, 10, 120, 0.4) 60%,
+      transparent 70%,
+      transparent
+    );
+    visibility: hidden;
+    animation: delayed-logo 1s 10s forwards ease-in;
+  }
 
-	
-	/* https://zellwk.com/blog/overcoming-astro-styling-frustrations/ */
+  @keyframes delayed-logo {
+    from {
+      visibility: visible;
+      opacity: 0;
+    }
 
-	.profile {
-		pointer-events: none;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		/* background: radial-gradient( rgba(0, 0, 0, 0.4) 0%, transparent 30%, transparent 100%); */
-		background: linear-gradient(transparent,  transparent 30%, rgba(81, 0, 81, 0.4) 40%, rgba(0, 10, 120, 0.4) 60%, transparent 70%, transparent);
-		visibility:hidden;
-		animation: delayed-logo 1s 10s forwards ease-in;
-	}
+    to {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 
-	@keyframes delayed-logo {
-		from {
-			visibility: visible;
-			opacity: 0;
-		}
+  .nav-container,
+  .typewriter-container,
+  .text-cross-fader {
+    height: 35%;
+  }
 
-		to {
-			opacity: 1;
-			visibility: visible
-		}
-	}
-
-	.nav-container, .typewriter-container, .text-cross-fader {
-		height: 35%;
-	}
-
-	.profile-name {
-		display: block;
-		color: white;
-		font-family: 'Bangers', cursive;
-		font-size: 10vmax;
-		padding: 0 8vw;
-		text-align: center;
-		text-shadow: 0 0 3px black;
-		filter: drop-shadow(0 0 10px rgba(0,0,0,1)) drop-shadow(0 0 20px rgba(0,0,0,.4));
-		/* filter: drop-shadow(0 0 10px rgba(0,0,0,1)); */
-	}
-
-	
+  .profile-name {
+    display: block;
+    color: white;
+    font-family: "Bangers", cursive;
+    font-size: 10vmax;
+    padding: 0 8vw;
+    text-align: center;
+    text-shadow: 0 0 3px black;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1))
+      drop-shadow(0 0 20px rgba(0, 0, 0, 0.4));
+    /* filter: drop-shadow(0 0 10px rgba(0,0,0,1)); */
+  }
 </style>
 <style is:global>
+  em {
+    font-style: italic;
+  }
 
-	em {
-		font-style: italic;
-	}
+  #text-cross-fader {
+    position: relative;
+    width: 100%;
+    opacity: 0;
+  }
 
-	#text-cross-fader {
-		position: relative;
-		width: 100%;
-		opacity: 0;
-	}
-	
-	#text-cross-fader > span {
-		padding: 0 10vw;
-		color: white;
-		font-size: 3vmax;
-		font-family: 'Cutive', serif;
-		text-shadow: 0 0 2px black;
-		text-align: center;
-	}
+  #text-cross-fader > span {
+    padding: 0 10vw;
+    color: white;
+    font-size: 3vmax;
+    font-family: "Cutive", serif;
+    text-shadow: 0 0 2px black;
+    text-align: center;
+  }
 
-	.fade-in-1s {
-		opacity: 1 !important;
-		transition: opacity 2s ease-in;
-	}
-
+  .fade-in-1s {
+    opacity: 1 !important;
+    transition: opacity 2s ease-in;
+  }
 </style>
