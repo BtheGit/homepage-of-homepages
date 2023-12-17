@@ -1,0 +1,106 @@
+---
+// MondrianGrid.astro
+// const colors = ['red', 'blue', 'yellow', 'white', 'black']; // Mondrian colors
+const colors = ["#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF"]; // Pastel colors
+const { size } = Astro.props ?? 10;
+const shapeSizes = {
+  // Define a range for each shape
+  "large-square": { minWidth: 5, maxWidth: 8 },
+  "medium-rectangle": { minWidth: 1, maxWidth: 2, minHeight: 3, maxHeight: 4 },
+  "thin-rectangle": { minWidth: 1, maxWidth: 2, minHeight: 3, maxHeight: 6 },
+  "small-square": { minWidth: 2, maxWidth: 4 },
+};
+---
+
+<div class="mondrian-grid" style={`--size: ${size};`}>
+  {
+    Array.from({ length: size * size }).map((_, index) => {
+      const randColor = Math.random();
+      const color =
+        randColor < 0.33
+          ? colors[Math.floor(Math.random() * colors.length)]
+          : "white";
+      const rand = Math.random();
+      let cellClass = "default-square"; // Default to small square
+      let spanWidth = 1; // Default span value
+      let spanHeight = 1; // Default span value
+      if (rand < 0.1) {
+        cellClass = "small-square";
+      } else if (rand < 0.13) {
+        cellClass = "large-square";
+      } else if (rand < 0.22) {
+        cellClass = "thin-rectangle";
+      } else if (rand < 0.25) {
+        cellClass = "medium-rectangle";
+      }
+      if (cellClass !== "default-square") {
+        spanWidth =
+          Math.floor(
+            Math.random() *
+              (shapeSizes[cellClass].maxWidth -
+                shapeSizes[cellClass].minWidth +
+                1)
+          ) + shapeSizes[cellClass].minWidth;
+        // Only rectangles have a minHeight
+        if (shapeSizes[cellClass].hasOwnProperty("minHeight")) {
+          spanHeight =
+            Math.floor(
+              Math.random() *
+                (shapeSizes[cellClass].maxHeight -
+                  shapeSizes[cellClass].minHeight +
+                  1)
+            ) + shapeSizes[cellClass].minHeight;
+
+          // Now, in order to have vertical and horizontal rectangles, we need to
+          // randomly swap the values of spanWidth and spanHeight
+          if (Math.random() < 0.5) {
+            const temp = spanWidth;
+            spanWidth = spanHeight;
+            spanHeight = temp;
+          }
+        }
+      }
+
+      return (
+        <div
+          class={`mondrian-cell ${cellClass}`}
+          style={`--color: ${color}; --span-width: ${spanWidth}; --span-height: ${spanHeight};`}
+        />
+      );
+    })
+  }
+</div>
+<style>
+  .mondrian-grid {
+    display: grid;
+    min-height: 100vh;
+    grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+    grid-auto-rows: 30px;
+    grid-auto-flow: dense;
+    grid-gap: 4px;
+    width: 100%;
+    position: relative;
+    border: 4px solid black;
+    background: black;
+  }
+  .mondrian-cell {
+    background-color: var(--color);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    grid-column-end: span var(--span-width);
+    grid-row-end: span var(--span-width);
+  }
+
+  .thin-rectangle,
+  .medium-rectangle {
+    grid-row-end: span var(--span-width);
+    grid-column-end: span var(--span-height);
+  }
+  .small-square,
+  .large-square {
+    grid-column-end: span var(--span-width);
+    grid-row-end: span var(--span-width);
+  }
+</style>

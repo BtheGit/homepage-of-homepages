@@ -1,0 +1,66 @@
+---
+import { getCollection } from "astro:content";
+import ProjectCard from "../../components/projectCard.astro";
+import MondrianGrid from "../../components/MondrianGrid.astro";
+import "../../components/GlobalStyles.astro";
+
+const projects = await getCollection("projects");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brendan Beltz: Projects Page</title>
+  </head>
+  <body>
+    <!-- <header>
+      <h1><span>Brendan Beltz</span> <span>Projects</span></h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/projects">Projects</a></li>
+          <li><a href="/about">About Me</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header> -->
+    <main>
+      <div class="projects">
+        <MondrianGrid size={10} />
+        <!-- {
+          projects.map(async (project) => {
+            // Note: We don't need to call the render function since we are not showing the body.
+            return (
+              <div class={`project-card project__${project.slug}`}>
+                <a class="project-link" href={`/projects/${project.slug}`}>
+                  <div class="img" />
+                  <span>{project.data.title}</span>
+                </a>
+              </div>
+            );
+          })
+        } -->
+      </div>
+      <!-- TODO: Add a series of sections detailing my various past projects.
+  
+      TITLE
+      ---
+      1-2 Line description   ||    Various links to the project's source code, live demo, when available
+      ---
+      1-2 Paragraphs describing the project in detail with interesting technical details
+  -->
+      <!-- {projects.map((project) => <ProjectCard project={project} />)} -->
+    </main>
+  </body>
+</html>
+
+<style>
+  .img {
+    height: 100px;
+    width: 100px;
+    background: rgb(154, 7, 194);
+    clip-path: circle();
+  }
+</style>
