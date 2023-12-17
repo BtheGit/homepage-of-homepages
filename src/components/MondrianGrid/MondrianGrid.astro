@@ -1,0 +1,248 @@
+---
+/**
+ * Requirements for module:
+ *
+ * MVP:
+ * - Should generate a Piet Mondrian style grid layout
+ *  - Cells should have randomized size, shape, and colors
+ *  - The base cell unit should always be square.
+ *  - The base cell size should have a minimum but be flexible to expand to fill the width of the grid container.
+ * - Should always fill the grid fully with cells (no gaps). Cells shouldnot overflow the grid, but the grid height can expand to accomodate all the cells.
+ * - Should respond to window resize events (both width and/or height changes)
+ *
+ *
+ * Stretch:
+ * - Should be able to specify a specific number of large squares
+ *
+ *
+ * TODO:
+ *
+ * Fix scrollbar causeing overflow (standard bullshit)
+ * Add horizontal bars too (and varying sizes)
+ * maybe have a first pass to subdivide the total grid area into several other uneven grids, and then use different proprtions for each subarray to have more variety visually.
+ */
+---
+
+<div class="mondrian"></div>
+<template id="mondrian-cell-template">
+  <div class="mondrian-cell"></div>
+</template>
+<style>
+  .mondrian {
+    display: grid;
+    /* Setting a min height can solve the unfilled grid issue and create a really cool header effect */
+    grid-template-columns: repeat(
+      var(--cell-count-width),
+      minmax(var(--cell-width), 1fr)
+    );
+    grid-template-rows: repeat(
+      var(--cell-count-height),
+      minmax(var(--cell-width), 1fr)
+    );
+    grid-auto-flow: row dense;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    min-height: 100%;
+    position: relative;
+    border: var(--border-width) solid black;
+    background: radial-gradient(
+      at center,
+      #1743ce 0%,
+      #34e5aa 50%,
+      #263027 80%
+    );
+  }
+  .mondrian-cell {
+    background-color: var(--background-color);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    grid-column-end: span var(--span-width);
+    grid-row-end: span var(--span-height);
+  }
+</style>
+
+<script>
+  const shapeDimensions = {
+    default: {
+      cellCount: 1,
+      width: 1,
+      height: 1,
+    },
+    small_square: {
+      cellCount: 4,
+      width: 2,
+      height: 2,
+    },
+    medium_square: {
+      cellCount: 9,
+      width: 3,
+      height: 3,
+    },
+    large_square: {
+      cellCount: 25,
+      width: 5,
+      height: 5,
+    },
+    small_rect: {
+      cellCount: 2,
+      width: 1,
+      height: 2,
+    },
+    medium_rect: {
+      cellCount: 4,
+      width: 1,
+      height: 4,
+    },
+    large_rect: {
+      cellCount: 6,
+      width: 1,
+      height: 6,
+    },
+  };
+  const colors = ["#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF"]; // Pastel colors
+  const baseColor = "#FFF";
+
+  const onResize = () => {
+    const mondrian: HTMLElement = document.querySelector(".mondrian")!;
+    mondrian.innerHTML = "";
+    const mondrianWidth = mondrian.offsetWidth;
+    const mondrianHeight = mondrian.offsetHeight;
+
+    const borderWidth = 2;
+    const baseWidth = 30; // minimum cell width
+    const cellCountWidth = Math.floor(
+      mondrianWidth / (baseWidth + borderWidth * 2)
+    );
+    let cellWidth = baseWidth;
+
+    // If there's a remainder, distribute it evenly among the cells
+    const remainder = mondrianWidth % (baseWidth + borderWidth * 2);
+    if (remainder > 0) {
+      cellWidth += remainder / cellCountWidth;
+    }
+    mondrian.style.setProperty("--cell-width", `${String(cellWidth)}px`);
+    mondrian.style.setProperty(
+      "--cell-count-width",
+      `${String(cellCountWidth)}`
+    );
+    mondrian.style.setProperty("--border-width", `${borderWidth}px`);
+
+    // If the the grid height is not evenly divisble by the cell width, we want to expand the grid height to accomodate the overflow, such that the grid is always filled with cells.
+    let cellCountHeight = Math.floor(
+      mondrianHeight / (cellWidth + borderWidth * 2)
+    );
+    const overflow = mondrianHeight % cellWidth;
+    // Once we figure out a better solution
+    if (overflow > 0) {
+      mondrian.style.minHeight = String(
+        (mondrianHeight % (cellWidth + borderWidth * 2)) + cellWidth
+      );
+      mondrian.style.maxHeight = String(
+        (mondrianHeight % (cellWidth + borderWidth * 2)) + cellWidth
+      );
+      mondrian.style.height = String(
+        (mondrianHeight % (cellWidth + borderWidth * 2)) + cellWidth
+      );
+      cellCountHeight += 1;
+    }
+    mondrian.style.setProperty(
+      "--cell-count-height",
+      `${String(cellCountHeight)}`
+    );
+
+    const totalCellCount = cellCountWidth * cellCountHeight;
+
+    // Build a list of all cells in the grid which we will use later to generate DOM elements.
+    // We will use preset percentages to determine the number of each type of cell we want to generate.
+    // We will then loop through the list and generate DOM elements for each cell.
+
+    // The most important part of the process is tracking the used cells so that we always have the exact amount of shapes to fit our grid of totalCellCount area.
+
+    let remainingCellCount = totalCellCount;
+    const shapes: Array<keyof typeof shapeDimensions> = [];
+    while (remainingCellCount > 0) {
+      const rand = Math.random();
+      const currentRowIndex = Math.floor(
+        (totalCellCount - remainingCellCount) / cellCountWidth
+      );
+      const reverseRowIndex = cellCountHeight - currentRowIndex;
+      if (remainingCellCount > 25) {
+        if (
+          rand < 0.1 &&
+          reverseRowIndex > shapeDimensions["small_square"].height - 1
+        ) {
+          shapes.push("small_square");
+          remainingCellCount -= shapeDimensions["small_square"].cellCount;
+          continue;
+        } else if (
+          rand < 0.15 &&
+          reverseRowIndex > shapeDimensions["medium_square"].height - 1
+        ) {
+          shapes.push("medium_square");
+          remainingCellCount -= shapeDimensions["medium_square"].cellCount;
+          continue;
+        } else if (
+          rand < 0.17 &&
+          reverseRowIndex > shapeDimensions["large_square"].height - 1
+        ) {
+          shapes.push("large_square");
+          remainingCellCount -= shapeDimensions["large_square"].cellCount;
+          continue;
+        } else if (
+          rand < 0.25 &&
+          reverseRowIndex > shapeDimensions["small_rect"].height - 1
+        ) {
+          shapes.push("small_rect");
+          remainingCellCount -= shapeDimensions["small_rect"].cellCount;
+          continue;
+        } else if (
+          rand < 0.3 &&
+          reverseRowIndex > shapeDimensions["medium_rect"].height - 1
+        ) {
+          shapes.push("medium_rect");
+          remainingCellCount -= shapeDimensions["medium_rect"].cellCount;
+          continue;
+        } else if (
+          rand < 0.45 &&
+          reverseRowIndex > shapeDimensions["large_rect"].height - 1
+        ) {
+          shapes.push("large_rect");
+          remainingCellCount -= shapeDimensions["large_rect"].cellCount;
+          continue;
+        }
+      }
+      shapes.push("default");
+      remainingCellCount -= shapeDimensions["default"].cellCount;
+    }
+
+    const template: HTMLTemplateElement = document.querySelector(
+      "#mondrian-cell-template"
+    )!;
+
+    for (let i = 0; i < shapes.length; i++) {
+      const shape = shapes[i];
+      const shapeDimension = shapeDimensions[shape];
+      const clonedFragment = template.content.cloneNode(true) as HTMLElement;
+      const newCell: HTMLElement =
+        clonedFragment.firstElementChild! as HTMLElement;
+
+      let randColor = colors[Math.floor(Math.random() * colors.length)];
+      randColor = Math.random() > 0.5 ? baseColor : randColor;
+      newCell.style.setProperty("border", `${borderWidth}px solid black`);
+      newCell.style.setProperty("--background-color", randColor);
+      newCell.classList.add("mondrian-cell");
+      newCell.style.setProperty("--span-width", String(shapeDimension.width));
+      newCell.style.setProperty("--span-height", String(shapeDimension.height));
+      mondrian.appendChild(newCell);
+    }
+  };
+
+  const onLoad = () => {
+    onResize();
+    window.addEventListener("resize", onResize);
+  };
+
+  onLoad();
+</script>

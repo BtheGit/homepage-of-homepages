@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import ProjectCard from "../../components/projectCard.astro";
-import MondrianGrid from "../../components/MondrianGrid.astro";
+import MondrianGrid from "../../components/MondrianGrid/MondrianGrid.astro";
 import "../../components/GlobalStyles.astro";
 
 const projects = await getCollection("projects");
@@ -28,7 +28,8 @@ const projects = await getCollection("projects");
     </header> -->
     <main>
       <div class="projects">
-        <MondrianGrid size={10} />
+        <!-- <div style="height: 1500px; background-color: blue;"></div> -->
+        <MondrianGrid />
         <!-- {
           projects.map(async (project) => {
             // Note: We don't need to call the render function since we are not showing the body.
@@ -57,6 +58,17 @@ const projects = await getCollection("projects");
 </html>
 
 <style>
+  main,
+  body,
+  html {
+    height: 100%;
+    width: 100%;
+  }
+  .projects {
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+  }
   .img {
     height: 100px;
     width: 100px;
