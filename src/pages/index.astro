@@ -1,6 +1,14 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import { PhotoArray } from "../components/PhotoArray/PhotoArray";
 import "the-new-css-reset/css/reset.css";
+
+// NOTE: Astro has some issues with view transitions in client islands.
+// Seems like for the most part, the main issue I'm having is the CSS in react components is not being reloaded.
+// Since this is one time solution, I'm just going to hoist the CSS (or just duplicate) into the main file.
+// https://github.com/withastro/astro/issues/8114
+import "../components/PhotoArray/PhotoArray.scss";
+import "../components/ImageFader/ImageFader.scss";
 
 export type ImageGlobType = {
   src: string;
@@ -14,7 +22,7 @@ const umbrellaImagePaths = (
 ).map((file) => file.default.src);
 ---
 
-<html lang="en">
+<html lang="en" transition:animate="slide">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -28,10 +36,11 @@ const umbrellaImagePaths = (
       rel="stylesheet"
     />
     <title>Brendan Beltz: A Web Developing Brendan Of All Time</title>
+    <ViewTransitions />
   </head>
   <body>
     <div class="bfa-container">
-      <PhotoArray client:only srcPaths={umbrellaImagePaths} />
+      <PhotoArray client:only="react" srcPaths={umbrellaImagePaths} />
     </div>
     <main>
       <div class="profile" id="profile-container">
@@ -48,7 +57,7 @@ const umbrellaImagePaths = (
             >
           </div>
         </div>
-        <h1 class="profile-name">Brendan Beltz</h1>
+        <a href="/projects"><h1 class="profile-name">Brendan Beltz</h1></a>
         <div id="text-cross-fader" class="text-cross-fader"></div>
         <script>
           import { initTextMorpher } from "../components/textMorpher.ts";
@@ -79,146 +88,145 @@ const umbrellaImagePaths = (
         </script>
       </div>
     </main>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <style>
+      html,
+      body,
+      main {
+        height: 100%;
+        width: 100%;
+      }
+
+      body {
+        background: black;
+      }
+
+      main {
+        background: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .bfa-container {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /* z-index: -1; */
+        overflow: hidden;
+      }
+
+      .nav-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+
+      .nav-bar {
+        display: flex;
+        height: 100px;
+      }
+
+      .nav-bar a {
+        margin: 0 20px;
+        filter: drop-shadow(0 0 5px rgba(0, 10, 120, 0.8));
+        width: 62px;
+        pointer-events: initial;
+      }
+
+      ion-icon {
+        color: white;
+        fill: white;
+      }
+
+      /* https://zellwk.com/blog/overcoming-astro-styling-frustrations/ */
+
+      .profile {
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        /* background: radial-gradient( rgba(0, 0, 0, 0.4) 0%, transparent 30%, transparent 100%); */
+        background: linear-gradient(
+          transparent,
+          transparent 30%,
+          rgba(81, 0, 81, 0.4) 40%,
+          rgba(0, 10, 120, 0.4) 60%,
+          transparent 70%,
+          transparent
+        );
+        visibility: hidden;
+        animation: delayed-logo 1s 10s forwards ease-in;
+      }
+
+      @keyframes delayed-logo {
+        from {
+          visibility: visible;
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+
+      .nav-container,
+      .typewriter-container,
+      .text-cross-fader {
+        height: 35%;
+      }
+
+      .profile-name {
+        display: block;
+        color: white;
+        font-family: "Bangers", cursive;
+        font-size: 10vmax;
+        padding: 0 8vw;
+        text-align: center;
+        text-shadow: 0 0 3px black;
+        filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1))
+          drop-shadow(0 0 20px rgba(0, 0, 0, 0.4));
+        /* filter: drop-shadow(0 0 10px rgba(0,0,0,1)); */
+      }
+    </style>
+    <style is:global>
+      em {
+        font-style: italic;
+      }
+
+      #text-cross-fader {
+        position: relative;
+        width: 100%;
+        opacity: 0;
+      }
+
+      #text-cross-fader > span {
+        padding: 0 10vw;
+        color: white;
+        font-size: 3vmax;
+        font-family: "Cutive", serif;
+        text-shadow: 0 0 2px black;
+        text-align: center;
+      }
+
+      .fade-in-1s {
+        opacity: 1 !important;
+        transition: opacity 2s ease-in;
+      }
+    </style>
   </body>
-  <script
-    type="module"
-    src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-  ></script>
 </html>
-
-<style>
-  html,
-  body,
-  main {
-    height: 100%;
-    width: 100%;
-  }
-
-  body {
-    background: black;
-  }
-
-  main {
-    background: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .bfa-container {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /* z-index: -1; */
-    overflow: hidden;
-  }
-
-  .nav-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-  }
-
-  .nav-bar {
-    display: flex;
-    height: 100px;
-  }
-
-  .nav-bar a {
-    margin: 0 20px;
-    filter: drop-shadow(0 0 5px rgba(0, 10, 120, 0.8));
-    width: 62px;
-    pointer-events: initial;
-  }
-
-  ion-icon {
-    color: white;
-    fill: white;
-  }
-
-  /* https://zellwk.com/blog/overcoming-astro-styling-frustrations/ */
-
-  .profile {
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    /* background: radial-gradient( rgba(0, 0, 0, 0.4) 0%, transparent 30%, transparent 100%); */
-    background: linear-gradient(
-      transparent,
-      transparent 30%,
-      rgba(81, 0, 81, 0.4) 40%,
-      rgba(0, 10, 120, 0.4) 60%,
-      transparent 70%,
-      transparent
-    );
-    visibility: hidden;
-    animation: delayed-logo 1s 10s forwards ease-in;
-  }
-
-  @keyframes delayed-logo {
-    from {
-      visibility: visible;
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-
-  .nav-container,
-  .typewriter-container,
-  .text-cross-fader {
-    height: 35%;
-  }
-
-  .profile-name {
-    display: block;
-    color: white;
-    font-family: "Bangers", cursive;
-    font-size: 10vmax;
-    padding: 0 8vw;
-    text-align: center;
-    text-shadow: 0 0 3px black;
-    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 1))
-      drop-shadow(0 0 20px rgba(0, 0, 0, 0.4));
-    /* filter: drop-shadow(0 0 10px rgba(0,0,0,1)); */
-  }
-</style>
-<style is:global>
-  em {
-    font-style: italic;
-  }
-
-  #text-cross-fader {
-    position: relative;
-    width: 100%;
-    opacity: 0;
-  }
-
-  #text-cross-fader > span {
-    padding: 0 10vw;
-    color: white;
-    font-size: 3vmax;
-    font-family: "Cutive", serif;
-    text-shadow: 0 0 2px black;
-    text-align: center;
-  }
-
-  .fade-in-1s {
-    opacity: 1 !important;
-    transition: opacity 2s ease-in;
-  }
-</style>

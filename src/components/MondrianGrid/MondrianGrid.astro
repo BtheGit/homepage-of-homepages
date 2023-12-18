@@ -241,7 +241,8 @@
 
   const onLoad = () => {
     onResize();
-    window.addEventListener("resize", onResize);
+    document.addEventListener("resize", onResize);
+    document.addEventListener("astro:page-load", onResize);
   };
 
   onLoad();

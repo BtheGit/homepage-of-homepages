@@ -1,18 +1,20 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import { getCollection } from "astro:content";
 import ProjectCard from "../../components/projectCard.astro";
 import MondrianGrid from "../../components/MondrianGrid/MondrianGrid.astro";
-import "../../components/GlobalStyles.astro";
+import "the-new-css-reset/css/reset.css";
 
 const projects = await getCollection("projects");
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" transition:animate="slide">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Brendan Beltz: Projects Page</title>
+    <ViewTransitions />
   </head>
   <body>
     <!-- <header>
@@ -54,25 +56,24 @@ const projects = await getCollection("projects");
   -->
       <!-- {projects.map((project) => <ProjectCard project={project} />)} -->
     </main>
+    <style>
+      main,
+      body,
+      html {
+        height: 100%;
+        width: 100%;
+      }
+      .projects {
+        height: 100%;
+        min-height: 100%;
+        width: 100%;
+      }
+      .img {
+        height: 100px;
+        width: 100px;
+        background: rgb(154, 7, 194);
+        clip-path: circle();
+      }
+    </style>
   </body>
 </html>
-
-<style>
-  main,
-  body,
-  html {
-    height: 100%;
-    width: 100%;
-  }
-  .projects {
-    height: 100%;
-    min-height: 100%;
-    width: 100%;
-  }
-  .img {
-    height: 100px;
-    width: 100px;
-    background: rgb(154, 7, 194);
-    clip-path: circle();
-  }
-</style>

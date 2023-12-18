@@ -1,6 +1,7 @@
 import { useLoadImagesFromPaths } from "../ImageFader/hooks";
 import { shuffle } from "../../utils/array";
 import { ImageFader } from "../ImageFader/ImageFader";
+import { useEffect } from "react";
 import "./PhotoArray.scss";
 
 export type PhotoArrayProps = {
@@ -11,7 +12,21 @@ export const PhotoArray = (props: PhotoArrayProps) => {
   const { srcPaths } = props;
   const [imageLoadingState, images] = useLoadImagesFromPaths(srcPaths);
 
+  
+  useEffect(() => {
+    const handlePageTransitionLoadEnd = () => {
+      console.log("Page transition load end");
+    }
+    document.addEventListener("astro:after-swap", handlePageTransitionLoadEnd);
+
+    return () => {
+      document.removeEventListener("astro:after-swap", handlePageTransitionLoadEnd);
+    }
+  }, []);
+
   if (imageLoadingState !== "loaded" || !images?.length) return null;
+
+
 
   // NOTE: Resize isnt working perfectly. Might want to brute force and just rerender this component on resizes.
 
