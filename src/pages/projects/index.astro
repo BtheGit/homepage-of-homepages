@@ -6,6 +6,13 @@ import MondrianGrid from "../../components/MondrianGrid/MondrianGrid.astro";
 import "the-new-css-reset/css/reset.css";
 
 const projects = await getCollection("projects");
+const projectLinks = projects.map((project) => {
+  return {
+    title: project.data.title,
+    href: `/projects/${project.slug}`,
+    color: "purple",
+  };
+});
 ---
 
 <!doctype html>
@@ -31,7 +38,7 @@ const projects = await getCollection("projects");
     <main>
       <div class="projects">
         <!-- <div style="height: 1500px; background-color: blue;"></div> -->
-        <MondrianGrid />
+        <MondrianGrid links={projectLinks} />
         <!-- {
           projects.map(async (project) => {
             // Note: We don't need to call the render function since we are not showing the body.

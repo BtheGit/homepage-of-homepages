@@ -21,9 +21,11 @@
  * Add horizontal bars too (and varying sizes)
  * maybe have a first pass to subdivide the total grid area into several other uneven grids, and then use different proprtions for each subarray to have more variety visually.
  */
+
+const { links } = Astro.props;
 ---
 
-<div class="mondrian"></div>
+<div class="mondrian" data-project-links={JSON.stringify(links)}></div>
 <template id="mondrian-cell-template">
   <div class="mondrian-cell"></div>
 </template>
@@ -106,6 +108,7 @@
 
   const onResize = () => {
     const mondrian: HTMLElement = document.querySelector(".mondrian")!;
+
     mondrian.innerHTML = "";
     const mondrianWidth = mondrian.offsetWidth;
     const mondrianHeight = mondrian.offsetHeight;
@@ -151,6 +154,12 @@
       "--cell-count-height",
       `${String(cellCountHeight)}`
     );
+
+    const links: Array<{
+      title: string;
+      href: string;
+      color: string;
+    }> = JSON.parse(mondrian.dataset.projectLinks ?? "[]");
 
     const totalCellCount = cellCountWidth * cellCountHeight;
 
@@ -221,6 +230,52 @@
       "#mondrian-cell-template"
     )!;
 
+    // Now that we have generated a random distribution of shapes. We want to replace a number of those shapes equal to the number of links, starting from the largest squares. So, we will make a new pass to gather all of our shapes while maintaining references to their position in the original array, letting us replace the origianl shape with a link on the next pass.
+    const shapeIndices = shapes.reduce((acc, curr, index) => {
+      if (curr === "default") {
+        return acc;
+      }
+      if (!acc[curr]) {
+        acc[curr] = [];
+      }
+
+      acc[curr].push(index);
+
+      return acc;
+    }, {});
+
+    function shuffleArray(array) {
+      let len = array.length,
+        currentIndex;
+      for (currentIndex = len - 1; currentIndex > 0; currentIndex--) {
+        let randIndex = Math.floor(Math.random() * (currentIndex + 1));
+        var temp = array[currentIndex];
+        array[currentIndex] = array[randIndex];
+        array[randIndex] = temp;
+      }
+    }
+
+    // However, in the event that there are more large squares than links, we don't want the distribution of links to be weighted towards the beginning of the page. So, we will also randomize the order of each shape grouping so that we are overwriting shapes with links in random positional order.
+    const { large_square, medium_square, small_square } = shapeIndices;
+    shuffleArray(large_square);
+    shuffleArray(medium_square);
+    shuffleArray(small_square);
+
+    const linkIndices = new Map();
+    while (links.length) {
+      let loc;
+      const link = links.pop();
+      if (large_square.length) {
+        loc = large_square.shift();
+      } else if (medium_square.length) {
+        loc = medium_square.shift();
+      } else {
+        loc = small_square.shift();
+      }
+
+      linkIndices.set(loc, link);
+    }
+
     for (let i = 0; i < shapes.length; i++) {
       const shape = shapes[i];
       const shapeDimension = shapeDimensions[shape];
@@ -230,11 +285,23 @@
 
       let randColor = colors[Math.floor(Math.random() * colors.length)];
       randColor = Math.random() > 0.5 ? baseColor : randColor;
+
       newCell.style.setProperty("border", `${borderWidth}px solid black`);
       newCell.style.setProperty("--background-color", randColor);
       newCell.classList.add("mondrian-cell");
       newCell.style.setProperty("--span-width", String(shapeDimension.width));
       newCell.style.setProperty("--span-height", String(shapeDimension.height));
+
+      if (linkIndices.has(i)) {
+        newCell.style.setProperty("position", "relative");
+        const link = linkIndices.get(i);
+        const anchor = document.createElement("a");
+        anchor.href = link.href;
+        anchor.style.setProperty("position", "absolute");
+        anchor.style.setProperty("inset", "0");
+        anchor.style.setProperty("background-color", "blue");
+        newCell.appendChild(anchor);
+      }
       mondrian.appendChild(newCell);
     }
   };
