@@ -29,7 +29,7 @@ const { links } = Astro.props;
 <template id="mondrian-cell-template">
   <div class="mondrian-cell"></div>
 </template>
-<style>
+<style is:global>
   .mondrian {
     display: grid;
     /* Setting a min height can solve the unfilled grid issue and create a really cool header effect */
@@ -48,12 +48,7 @@ const { links } = Astro.props;
     min-height: 100%;
     position: relative;
     border: var(--border-width) solid black;
-    background: radial-gradient(
-      at center,
-      #1743ce 0%,
-      #34e5aa 50%,
-      #263027 80%
-    );
+    background: black;
   }
   .mondrian-cell {
     background-color: var(--background-color);
@@ -62,6 +57,35 @@ const { links } = Astro.props;
     height: 100%;
     grid-column-end: span var(--span-width);
     grid-row-end: span var(--span-height);
+
+    a {
+      box-shadow: inset 0 0 10px 10px white;
+    }
+  }
+
+  /* .blink {
+    animation: blink 2s;
+  } */
+
+  @keyframes blink {
+    0% {
+      /* filter: saturate(1); */
+    }
+
+    20% {
+    }
+
+    50% {
+      filter: saturate(10);
+      /* transform: scale(2); */
+    }
+
+    80% {
+    }
+
+    100% {
+      /* filter: saturate(1); */
+    }
   }
 </style>
 
@@ -103,7 +127,22 @@ const { links } = Astro.props;
       height: 6,
     },
   };
-  const colors = ["#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF"]; // Pastel colors
+  // const colors = ["#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF"]; // Pastel colors
+  const colors = ["#f72585", "#7209b7", "#3a0ca3", "#4361ee", "#4cc9f0"];
+  // const colors = ["#ecc2ff","#e4c6ff","#d5c4ff","#c6c6fe","#c6cbff","#c4d6ff","#c0dafd","#bde4fe","#bce9fe","#b8fbff"]
+
+  // const colors = [
+  //   "#ffadad",
+  //   "#ffd6a5",
+  //   "#fdffb6",
+  //   "#caffbf",
+  //   "#9bf6ff",
+  //   "#a0c4ff",
+  //   "#bdb2ff",
+  //   "#ffc6ff",
+  // ];
+
+  // TODO: Have palette and freq of white, be related
   const baseColor = "#FFF";
 
   const onResize = () => {
@@ -114,7 +153,7 @@ const { links } = Astro.props;
     const mondrianHeight = mondrian.offsetHeight;
 
     const borderWidth = 2;
-    const baseWidth = 30; // minimum cell width
+    const baseWidth = 20; // minimum cell width
     const cellCountWidth = Math.floor(
       mondrianWidth / (baseWidth + borderWidth * 2)
     );
@@ -193,7 +232,7 @@ const { links } = Astro.props;
           remainingCellCount -= shapeDimensions["medium_square"].cellCount;
           continue;
         } else if (
-          rand < 0.17 &&
+          rand < 0.165 &&
           reverseRowIndex > shapeDimensions["large_square"].height - 1
         ) {
           shapes.push("large_square");
@@ -214,7 +253,7 @@ const { links } = Astro.props;
           remainingCellCount -= shapeDimensions["medium_rect"].cellCount;
           continue;
         } else if (
-          rand < 0.45 &&
+          rand < 0.35 &&
           reverseRowIndex > shapeDimensions["large_rect"].height - 1
         ) {
           shapes.push("large_rect");
@@ -288,20 +327,23 @@ const { links } = Astro.props;
         clonedFragment.firstElementChild! as HTMLElement;
 
       let randColor = colors[Math.floor(Math.random() * colors.length)];
-      randColor = Math.random() > 0.5 ? baseColor : randColor;
+      randColor = Math.random() > 0.95 ? baseColor : randColor;
 
       newCell.style.setProperty("border", `${borderWidth}px solid black`);
       newCell.style.setProperty("--background-color", randColor);
       newCell.classList.add("mondrian-cell");
+      newCell.classList.add(shape);
       newCell.style.setProperty("--span-width", String(shapeDimension.width));
       newCell.style.setProperty("--span-height", String(shapeDimension.height));
 
       if (linkIndices.has(i)) {
         newCell.style.setProperty("position", "relative");
+        newCell.classList.add("link");
         // newCell.style.setProperty("border", `${borderWidth}px solid black`);
         const link = linkIndices.get(i);
         const anchor = document.createElement("a");
         anchor.href = link.href;
+        anchor.classList.add("a-link");
         anchor.style.setProperty("position", "absolute");
         anchor.style.setProperty("inset", "0");
         anchor.style.setProperty("background-image", `url(${link.image})`);
@@ -310,6 +352,29 @@ const { links } = Astro.props;
       }
       mondrian.appendChild(newCell);
     }
+
+    const nonLinkCells: HTMLElement[] = Array.from(
+      document.querySelectorAll(".mondrian-cell.default")!
+    );
+    blinker(nonLinkCells);
+  };
+
+  const blinker = (nonLinkCells: HTMLElement[]) => {
+    const count = Math.ceil(Math.random() * 25);
+    for (let i = 0; i < count; i++) {
+      const randomCell =
+        nonLinkCells[Math.floor(nonLinkCells.length * Math.random())];
+      randomCell.style.setProperty(
+        "animation",
+        `${Math.ceil(Math.random() * 3)}s blink`
+      );
+      randomCell.addEventListener("animationend", () => {
+        randomCell.style.removeProperty("animation");
+      });
+    }
+    setTimeout(() => {
+      blinker(nonLinkCells);
+    }, Math.random() * 500);
   };
 
   const onLoad = () => {
