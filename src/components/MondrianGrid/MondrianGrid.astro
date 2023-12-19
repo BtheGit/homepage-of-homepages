@@ -314,7 +314,7 @@ const { links } = Astro.props;
 
   const onLoad = () => {
     onResize();
-    document.addEventListener("resize", onResize);
+    window.addEventListener("resize", onResize);
     document.addEventListener("astro:page-load", onResize);
   };
 
