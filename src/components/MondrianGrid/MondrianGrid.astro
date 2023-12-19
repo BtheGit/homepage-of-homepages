@@ -231,20 +231,24 @@ const { links } = Astro.props;
     )!;
 
     // Now that we have generated a random distribution of shapes. We want to replace a number of those shapes equal to the number of links, starting from the largest squares. So, we will make a new pass to gather all of our shapes while maintaining references to their position in the original array, letting us replace the origianl shape with a link on the next pass.
-    const shapeIndices = shapes.reduce((acc, curr, index) => {
-      if (curr === "default") {
+    const shapeIndices = shapes.reduce(
+      (acc, curr, index) => {
+        if (curr === "default") {
+          return acc;
+        }
+
+        acc[curr].push(index);
+
         return acc;
-      }
-      if (!acc[curr]) {
-        acc[curr] = [];
-      }
+      },
+      Object.fromEntries(
+        Object.keys(shapeDimensions).map(
+          (key: string) => [key, []] as [string, number[]]
+        )
+      )
+    );
 
-      acc[curr].push(index);
-
-      return acc;
-    }, {});
-
-    function shuffleArray(array) {
+    function shuffleArray(array: number[] = []) {
       let len = array.length,
         currentIndex;
       for (currentIndex = len - 1; currentIndex > 0; currentIndex--) {
@@ -294,12 +298,14 @@ const { links } = Astro.props;
 
       if (linkIndices.has(i)) {
         newCell.style.setProperty("position", "relative");
+        // newCell.style.setProperty("border", `${borderWidth}px solid black`);
         const link = linkIndices.get(i);
         const anchor = document.createElement("a");
         anchor.href = link.href;
         anchor.style.setProperty("position", "absolute");
         anchor.style.setProperty("inset", "0");
-        anchor.style.setProperty("background-color", "blue");
+        anchor.style.setProperty("background-image", `url(${link.image})`);
+        anchor.style.setProperty("background-size", "cover");
         newCell.appendChild(anchor);
       }
       mondrian.appendChild(newCell);
