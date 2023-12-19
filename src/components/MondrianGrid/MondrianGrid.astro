@@ -152,8 +152,11 @@ const { links } = Astro.props;
     const mondrianWidth = mondrian.offsetWidth;
     const mondrianHeight = mondrian.offsetHeight;
 
-    const borderWidth = 2;
-    const baseWidth = 20; // minimum cell width
+    const dynamicCellSize = Math.max(mondrianHeight, mondrianWidth) / 40;
+    const dynamicBorderWidth = Math.max(Math.floor(dynamicCellSize / 15), 1);
+
+    const borderWidth = dynamicBorderWidth; // 2;
+    const baseWidth = dynamicCellSize; // 30; // minimum cell width
     const cellCountWidth = Math.floor(
       mondrianWidth / (baseWidth + borderWidth * 2)
     );
