@@ -381,7 +381,7 @@ const { links } = Astro.props;
     const nonLinkCells: HTMLElement[] = Array.from(
       document.querySelectorAll(".mondrian-cell.default")!
     );
-    // blinker(nonLinkCells);
+    blinker(nonLinkCells);
   };
 
   // Note: Because of view transitions, we can't depend on the onLoad function triggering as consistently as the onResize.
