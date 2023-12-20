@@ -17,9 +17,9 @@
  *
  * TODO:
  *
- * Fix scrollbar causeing overflow (standard bullshit)
  * Add horizontal bars too (and varying sizes)
  * maybe have a first pass to subdivide the total grid area into several other uneven grids, and then use different proprtions for each subarray to have more variety visually.
+ * Clean it up tons :)
  */
 
 const { links } = Astro.props;
@@ -90,6 +90,66 @@ const { links } = Astro.props;
 </style>
 
 <script>
+  function shuffleArray(array: number[] = []) {
+    let len = array.length,
+      currentIndex;
+    for (currentIndex = len - 1; currentIndex > 0; currentIndex--) {
+      let randIndex = Math.floor(Math.random() * (currentIndex + 1));
+      var temp = array[currentIndex];
+      array[currentIndex] = array[randIndex];
+      array[randIndex] = temp;
+    }
+  }
+
+  type Theme = {
+    colors: string[];
+    baseColor: string;
+    blankPercentage: number;
+  };
+
+  const themes = new Map<string, Theme>();
+
+  themes.set("synthwave", {
+    colors: ["#f72585", "#7209b7", "#3a0ca3", "#4361ee", "#4cc9f0"],
+    baseColor: "#FFF",
+    blankPercentage: 0.05,
+    // TODO: animation type? Or have a separate blinker settings?
+  });
+
+  themes.set("pastel_rainbow", {
+    colors: [
+      "#ffadad",
+      "#ffd6a5",
+      "#fdffb6",
+      "#caffbf",
+      "#9bf6ff",
+      "#a0c4ff",
+      "#bdb2ff",
+      "#ffc6ff",
+    ],
+    baseColor: "#FFF",
+    blankPercentage: 0.25,
+  });
+
+  themes.set("pastel_pink_gradient", {
+    colors: [
+      "#ecc2ff",
+      "#e4c6ff",
+      "#d5c4ff",
+      "#c6c6fe",
+      "#c6cbff",
+      "#c4d6ff",
+      "#c0dafd",
+      "#bde4fe",
+      "#bce9fe",
+      "#b8fbff",
+    ],
+    baseColor: "#FFF",
+    blankPercentage: 0.3,
+  });
+
+  const theme = themes.get("pastel_pink_gradient")!;
+
   const shapeDimensions = {
     default: {
       cellCount: 1,
@@ -127,23 +187,24 @@ const { links } = Astro.props;
       height: 6,
     },
   };
-  // const colors = ["#FFB3BA", "#FFDFBA", "#FFFFBA", "#BAFFC9", "#BAE1FF"]; // Pastel colors
-  const colors = ["#f72585", "#7209b7", "#3a0ca3", "#4361ee", "#4cc9f0"];
-  // const colors = ["#ecc2ff","#e4c6ff","#d5c4ff","#c6c6fe","#c6cbff","#c4d6ff","#c0dafd","#bde4fe","#bce9fe","#b8fbff"]
 
-  // const colors = [
-  //   "#ffadad",
-  //   "#ffd6a5",
-  //   "#fdffb6",
-  //   "#caffbf",
-  //   "#9bf6ff",
-  //   "#a0c4ff",
-  //   "#bdb2ff",
-  //   "#ffc6ff",
-  // ];
-
-  // TODO: Have palette and freq of white, be related
-  const baseColor = "#FFF";
+  const blinker = (nonLinkCells: HTMLElement[]) => {
+    const count = Math.ceil(Math.random() * 25);
+    for (let i = 0; i < count; i++) {
+      const randomCell =
+        nonLinkCells[Math.floor(nonLinkCells.length * Math.random())];
+      randomCell.style.setProperty(
+        "animation",
+        `${Math.ceil(Math.random() * 3)}s blink`
+      );
+      randomCell.addEventListener("animationend", () => {
+        randomCell.style.removeProperty("animation");
+      });
+    }
+    setTimeout(() => {
+      blinker(nonLinkCells);
+    }, Math.random() * 500);
+  };
 
   const onResize = () => {
     const mondrian: HTMLElement = document.querySelector(".mondrian")!;
@@ -152,14 +213,19 @@ const { links } = Astro.props;
     const mondrianWidth = mondrian.offsetWidth;
     const mondrianHeight = mondrian.offsetHeight;
 
+    // Going to essentially do 1/40th of vmax for determining cell size
     const dynamicCellSize = Math.max(mondrianHeight, mondrianWidth) / 40;
     const dynamicBorderWidth = Math.max(Math.floor(dynamicCellSize / 15), 1);
 
+    // NOTE: keeping these here as reference for early default values
     const borderWidth = dynamicBorderWidth; // 2;
     const baseWidth = dynamicCellSize; // 30; // minimum cell width
     const cellCountWidth = Math.floor(
       mondrianWidth / (baseWidth + borderWidth * 2)
     );
+
+    // TODO: I don't think I need a non-mutable reference to the base width with the new approach. This is redundant
+    // TODO: Remove
     let cellWidth = baseWidth;
 
     // If there's a remainder, distribute it evenly among the cells
@@ -290,17 +356,6 @@ const { links } = Astro.props;
       )
     );
 
-    function shuffleArray(array: number[] = []) {
-      let len = array.length,
-        currentIndex;
-      for (currentIndex = len - 1; currentIndex > 0; currentIndex--) {
-        let randIndex = Math.floor(Math.random() * (currentIndex + 1));
-        var temp = array[currentIndex];
-        array[currentIndex] = array[randIndex];
-        array[randIndex] = temp;
-      }
-    }
-
     // However, in the event that there are more large squares than links, we don't want the distribution of links to be weighted towards the beginning of the page. So, we will also randomize the order of each shape grouping so that we are overwriting shapes with links in random positional order.
     const { large_square, medium_square, small_square } = shapeIndices;
     shuffleArray(large_square);
@@ -329,8 +384,10 @@ const { links } = Astro.props;
       const newCell: HTMLElement =
         clonedFragment.firstElementChild! as HTMLElement;
 
-      let randColor = colors[Math.floor(Math.random() * colors.length)];
-      randColor = Math.random() > 0.95 ? baseColor : randColor;
+      let randColor =
+        theme.colors[Math.floor(Math.random() * theme.colors.length)];
+      randColor =
+        Math.random() > 1 - theme.blankPercentage ? theme.baseColor : randColor;
 
       newCell.style.setProperty("border", `${borderWidth}px solid black`);
       newCell.style.setProperty("--background-color", randColor);
@@ -360,24 +417,6 @@ const { links } = Astro.props;
       document.querySelectorAll(".mondrian-cell.default")!
     );
     blinker(nonLinkCells);
-  };
-
-  const blinker = (nonLinkCells: HTMLElement[]) => {
-    const count = Math.ceil(Math.random() * 25);
-    for (let i = 0; i < count; i++) {
-      const randomCell =
-        nonLinkCells[Math.floor(nonLinkCells.length * Math.random())];
-      randomCell.style.setProperty(
-        "animation",
-        `${Math.ceil(Math.random() * 3)}s blink`
-      );
-      randomCell.addEventListener("animationend", () => {
-        randomCell.style.removeProperty("animation");
-      });
-    }
-    setTimeout(() => {
-      blinker(nonLinkCells);
-    }, Math.random() * 500);
   };
 
   const onLoad = () => {
