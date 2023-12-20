@@ -22,10 +22,10 @@
  * Clean it up tons :)
  */
 
-const { links } = Astro.props;
+const { embeds } = Astro.props;
 ---
 
-<div class="mondrian" data-project-links={JSON.stringify(links)}></div>
+<div class="mondrian" data-embeds={JSON.stringify(embeds)}></div>
 <template id="mondrian-cell-template">
   <div class="mondrian-cell"></div>
 </template>
@@ -57,27 +57,6 @@ const { links } = Astro.props;
     height: 100%;
     grid-column-end: span var(--span-width);
     grid-row-end: span var(--span-height);
-
-    a {
-      overflow: hidden;
-      background-color: black;
-      div {
-        /* box-shadow: inset 0 0 3px 5px white; */
-        transition: transform 250ms ease-in-out;
-        backface-visibility: hidden;
-        transform-origin: left;
-        background-color: white;
-      }
-
-      :where(&:focus, &:hover) {
-        box-shadow: inset 0 0 1px 10px black;
-        background-color: black;
-        > div {
-          box-shadow: inset 0 0 0 2px white;
-          transform: perspective(1em) rotateY(5deg);
-        }
-      }
-    }
   }
 
   /* .blink {
@@ -109,6 +88,7 @@ const { links } = Astro.props;
 <script>
   import { mutateShuffle } from "../../utils/array";
   import { themes } from "./gridThemes";
+  import type { IEmbed } from "../../types";
 
   const theme = themes.get("synthwave")!;
 
@@ -230,11 +210,7 @@ const { links } = Astro.props;
       `${String(cellCountHeight)}`
     );
 
-    const links: Array<{
-      title: string;
-      href: string;
-      color: string;
-    }> = JSON.parse(mondrian.dataset.projectLinks ?? "[]");
+    const embeds: IEmbed[] = JSON.parse(mondrian.dataset.embeds ?? "[]");
 
     const totalCellCount = cellCountWidth * cellCountHeight;
 
@@ -246,6 +222,9 @@ const { links } = Astro.props;
 
     let remainingCellCount = totalCellCount;
     const shapes: Array<keyof typeof shapeDimensions> = [];
+
+    // TODO: Force at least one large square for the title box (and to respect anything that says large (so I can highlight things))
+
     while (remainingCellCount > 0) {
       const rand = Math.random();
       const currentRowIndex = Math.floor(
@@ -329,10 +308,10 @@ const { links } = Astro.props;
     mutateShuffle(medium_square);
     mutateShuffle(small_square);
 
-    const linkIndices = new Map();
-    while (links.length) {
+    const embedIndices = new Map();
+    while (embeds.length) {
       let loc;
-      const link = links.pop();
+      const embed = embeds.shift();
       if (large_square.length) {
         loc = large_square.shift();
       } else if (medium_square.length) {
@@ -341,7 +320,7 @@ const { links } = Astro.props;
         loc = small_square.shift();
       }
 
-      linkIndices.set(loc, link);
+      embedIndices.set(loc, embed);
     }
 
     for (let i = 0; i < shapes.length; i++) {
@@ -363,25 +342,20 @@ const { links } = Astro.props;
       newCell.style.setProperty("--span-width", String(shapeDimension.width));
       newCell.style.setProperty("--span-height", String(shapeDimension.height));
 
-      if (linkIndices.has(i)) {
+      if (embedIndices.has(i)) {
         newCell.style.setProperty("position", "relative");
-        newCell.classList.add("link");
-        // newCell.style.setProperty("border", `${borderWidth}px solid black`);
-        const link = linkIndices.get(i);
+        newCell.classList.add("embed");
+        const embed = embedIndices.get(i);
 
-        newCell.innerHTML = `
-          <a href="${link.href}" class="a-link" style="position: absolute; inset: 0;">
-            <div style="height: 100%; width: 100%; background-image: url(${link.image}); background-size: cover;"></div>
-          </a>
-        `;
+        newCell.innerHTML = embed.innerHTML;
       }
       mondrian.appendChild(newCell);
     }
 
-    const nonLinkCells: HTMLElement[] = Array.from(
+    const nonEmbedCells: HTMLElement[] = Array.from(
       document.querySelectorAll(".mondrian-cell.default")!
     );
-    blinker(nonLinkCells);
+    blinker(nonEmbedCells);
   };
 
   // Note: Because of view transitions, we can't depend on the onLoad function triggering as consistently as the onResize.

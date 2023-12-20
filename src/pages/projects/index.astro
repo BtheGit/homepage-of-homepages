@@ -1,19 +1,43 @@
 ---
 import { ViewTransitions } from "astro:transitions";
 import { getCollection } from "astro:content";
-import ProjectCard from "../../components/projectCard.astro";
 import MondrianGrid from "../../components/MondrianGrid/MondrianGrid.astro";
 import "../../styles/global.css";
+import type { IEmbed } from "../../types";
 
 const projects = await getCollection("projects");
-const projectLinks = projects.map((project) => {
+const projectLinkEmbeds: IEmbed[] = projects.map((project) => {
   return {
-    title: project.data.title,
-    href: `/projects/${project.slug}`,
-    color: "purple",
-    image: project.data.image,
+    size: "any",
+    innerHTML: `
+      <a href="/projects/${project.slug!}" class="embed embed--project-link">
+        <div style=" background-image: url(${project.data.image!}); "></div>
+      </a>
+    `,
   };
 });
+
+// NOTE: Since we don't have a nav, or title, or really anything for the projects page, we should at least artifically guarantee  large squares for a home button and a title box for now. We can force large squares for at least the important stuff by requiring
+
+const titleEmbed: IEmbed = {
+  size: "large",
+  innerHTML: `
+  <div class="embed embed--title">
+    <h1>PROJECTS</h1>
+  </div>
+  `,
+};
+
+const homeNavEmbed: IEmbed = {
+  size: "any",
+  innerHTML: `
+    <a href="/" class="embed embed--nav">
+      <ion-icon name="home"></ion-icon>
+    </a>
+  `,
+};
+
+const embeds: IEmbed[] = [titleEmbed, ...projectLinkEmbeds, homeNavEmbed];
 ---
 
 <!doctype html>
@@ -25,46 +49,12 @@ const projectLinks = projects.map((project) => {
     <ViewTransitions />
   </head>
   <body>
-    <!-- <header>
-      <h1><span>Brendan Beltz</span> <span>Projects</span></h1>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/projects">Projects</a></li>
-          <li><a href="/about">About Me</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
-      </nav>
-    </header> -->
     <main>
       <div class="projects">
-        <!-- <div style="height: 1500px; background-color: blue;"></div> -->
-        <MondrianGrid links={projectLinks} />
-        <!-- {
-          projects.map(async (project) => {
-            // Note: We don't need to call the render function since we are not showing the body.
-            return (
-              <div class={`project-card project__${project.slug}`}>
-                <a class="project-link" href={`/projects/${project.slug}`}>
-                  <div class="img" />
-                  <span>{project.data.title}</span>
-                </a>
-              </div>
-            );
-          })
-        } -->
+        <MondrianGrid embeds={embeds} />
       </div>
-      <!-- TODO: Add a series of sections detailing my various past projects.
-  
-      TITLE
-      ---
-      1-2 Line description   ||    Various links to the project's source code, live demo, when available
-      ---
-      1-2 Paragraphs describing the project in detail with interesting technical details
-  -->
-      <!-- {projects.map((project) => <ProjectCard project={project} />)} -->
     </main>
-    <style>
+    <style is:global>
       main,
       body,
       html {
@@ -76,12 +66,105 @@ const projectLinks = projects.map((project) => {
         min-height: 100%;
         width: 100%;
       }
-      .img {
-        height: 100px;
-        width: 100px;
-        background: rgb(154, 7, 194);
-        clip-path: circle();
+
+      .embed {
+        position: absolute;
+        inset: 0;
+        background: white;
+        color: white;
+      }
+
+      .embed--nav {
+        padding: 20%;
+
+        ion-icon {
+          fill: #7209b7;
+        }
+      }
+
+      .embed--project-link {
+        overflow: hidden;
+        background-color: black;
+        div {
+          height: 100%;
+          width: 100%;
+          background-size: cover;
+          background-color: white;
+          /* box-shadow: inset 0 0 3px 5px white; */
+          transition: transform 250ms ease-in-out;
+          backface-visibility: hidden;
+          transform-origin: left;
+        }
+
+        :where(&:focus, &:hover) {
+          box-shadow: inset 0 0 1px 10px black;
+          background-color: black;
+          > div {
+            box-shadow: inset 0 0 0 2px white;
+            transform: perspective(1em) rotateY(5deg);
+          }
+        }
+      }
+
+      .embed--title {
+        position: absolute;
+        inset: 0;
+        box-shadow:
+          inset 0 0 1px 15px white,
+          inset 0 0 1px 16px black;
+        /* background: linear-gradient(45deg, #ff00e0 0%, white 50%); */
+        background: linear-gradient(
+          45deg,
+          #f72585 0%,
+          #f72585 20%,
+          #7209b7 20%,
+          #7209b7 30%,
+          #4361ee 30%,
+          #4361ee 40%,
+          #4cc9f0 40%,
+          #4cc9f0 50%,
+          #fff 50%
+        );
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        padding: 5px;
+
+        h1 {
+          font-size: clamp(1.5em, 7vmin, 1.9em);
+          line-height: 1em;
+          font-weight: 900;
+          text-wrap: wrap;
+          word-break: break-all;
+          text-align: right;
+          grid-column: 2;
+          background-color: #78f3f1;
+          background-image: linear-gradient(45deg, #b444ff, #9f1754);
+          background-size: 100%;
+          background-size: 400% 400%;
+          animation: gradient 15s ease infinite;
+          -webkit-background-clip: text;
+          -moz-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          -moz-text-fill-color: transparent;
+        }
+      }
+
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
       }
     </style>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
   </body>
 </html>
