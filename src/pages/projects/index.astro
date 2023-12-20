@@ -3,7 +3,7 @@ import { ViewTransitions } from "astro:transitions";
 import { getCollection } from "astro:content";
 import ProjectCard from "../../components/projectCard.astro";
 import MondrianGrid from "../../components/MondrianGrid/MondrianGrid.astro";
-import "the-new-css-reset/css/reset.css";
+import "../../styles/global.css";
 
 const projects = await getCollection("projects");
 const projectLinks = projects.map((project) => {

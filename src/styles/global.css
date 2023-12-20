@@ -1,0 +1,8 @@
+/* NOTE: I''m not directly importing this into components so I have some flexibility to extend it. */
+/* Possible extensions to emulate https://mattbrictson.com/blog/css-normalize-and-reset */
+/* https://www.joshwcomeau.com/css/custom-css-reset/ */
+@import 'the-new-css-reset';
+
+:focus, :focus-visible {
+  outline: revert;
+}
