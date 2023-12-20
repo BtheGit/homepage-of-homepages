@@ -59,7 +59,24 @@ const { links } = Astro.props;
     grid-row-end: span var(--span-height);
 
     a {
-      box-shadow: inset 0 0 3px 5px white;
+      overflow: hidden;
+      background-color: black;
+      div {
+        /* box-shadow: inset 0 0 3px 5px white; */
+        transition: transform 250ms ease-in-out;
+        backface-visibility: hidden;
+        transform-origin: left;
+        background-color: white;
+      }
+
+      :where(&:focus, &:hover) {
+        box-shadow: inset 0 0 1px 10px black;
+        background-color: black;
+        > div {
+          box-shadow: inset 0 0 0 2px white;
+          transform: perspective(1em) rotateY(5deg);
+        }
+      }
     }
   }
 
@@ -351,14 +368,12 @@ const { links } = Astro.props;
         newCell.classList.add("link");
         // newCell.style.setProperty("border", `${borderWidth}px solid black`);
         const link = linkIndices.get(i);
-        const anchor = document.createElement("a");
-        anchor.href = link.href;
-        anchor.classList.add("a-link");
-        anchor.style.setProperty("position", "absolute");
-        anchor.style.setProperty("inset", "0");
-        anchor.style.setProperty("background-image", `url(${link.image})`);
-        anchor.style.setProperty("background-size", "cover");
-        newCell.appendChild(anchor);
+
+        newCell.innerHTML = `
+          <a href="${link.href}" class="a-link" style="position: absolute; inset: 0;">
+            <div style="height: 100%; width: 100%; background-image: url(${link.image}); background-size: cover;"></div>
+          </a>
+        `;
       }
       mondrian.appendChild(newCell);
     }
@@ -366,7 +381,7 @@ const { links } = Astro.props;
     const nonLinkCells: HTMLElement[] = Array.from(
       document.querySelectorAll(".mondrian-cell.default")!
     );
-    blinker(nonLinkCells);
+    // blinker(nonLinkCells);
   };
 
   // Note: Because of view transitions, we can't depend on the onLoad function triggering as consistently as the onResize.
