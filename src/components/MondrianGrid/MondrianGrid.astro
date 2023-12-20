@@ -59,7 +59,7 @@ const { links } = Astro.props;
     grid-row-end: span var(--span-height);
 
     a {
-      box-shadow: inset 0 0 10px 10px white;
+      box-shadow: inset 0 0 3px 5px white;
     }
   }
 
@@ -90,63 +90,8 @@ const { links } = Astro.props;
 </style>
 
 <script>
-  function shuffleArray(array: number[] = []) {
-    let len = array.length,
-      currentIndex;
-    for (currentIndex = len - 1; currentIndex > 0; currentIndex--) {
-      let randIndex = Math.floor(Math.random() * (currentIndex + 1));
-      var temp = array[currentIndex];
-      array[currentIndex] = array[randIndex];
-      array[randIndex] = temp;
-    }
-  }
-
-  type Theme = {
-    colors: string[];
-    baseColor: string;
-    blankPercentage: number;
-  };
-
-  const themes = new Map<string, Theme>();
-
-  themes.set("synthwave", {
-    colors: ["#f72585", "#7209b7", "#3a0ca3", "#4361ee", "#4cc9f0"],
-    baseColor: "#FFF",
-    blankPercentage: 0.05,
-    // TODO: animation type? Or have a separate blinker settings?
-  });
-
-  themes.set("pastel_rainbow", {
-    colors: [
-      "#ffadad",
-      "#ffd6a5",
-      "#fdffb6",
-      "#caffbf",
-      "#9bf6ff",
-      "#a0c4ff",
-      "#bdb2ff",
-      "#ffc6ff",
-    ],
-    baseColor: "#FFF",
-    blankPercentage: 0.25,
-  });
-
-  themes.set("pastel_pink_gradient", {
-    colors: [
-      "#ecc2ff",
-      "#e4c6ff",
-      "#d5c4ff",
-      "#c6c6fe",
-      "#c6cbff",
-      "#c4d6ff",
-      "#c0dafd",
-      "#bde4fe",
-      "#bce9fe",
-      "#b8fbff",
-    ],
-    baseColor: "#FFF",
-    blankPercentage: 0.3,
-  });
+  import { mutateShuffle } from "../../utils/array";
+  import { themes } from "./gridThemes";
 
   const theme = themes.get("synthwave")!;
 
@@ -363,9 +308,9 @@ const { links } = Astro.props;
 
     // However, in the event that there are more large squares than links, we don't want the distribution of links to be weighted towards the beginning of the page. So, we will also randomize the order of each shape grouping so that we are overwriting shapes with links in random positional order.
     const { large_square, medium_square, small_square } = shapeIndices;
-    shuffleArray(large_square);
-    shuffleArray(medium_square);
-    shuffleArray(small_square);
+    mutateShuffle(large_square);
+    mutateShuffle(medium_square);
+    mutateShuffle(small_square);
 
     const linkIndices = new Map();
     while (links.length) {
@@ -424,6 +369,8 @@ const { links } = Astro.props;
     blinker(nonLinkCells);
   };
 
+  // Note: Because of view transitions, we can't depend on the onLoad function triggering as consistently as the onResize.
+  // So, onResize is effectively our main process instead.
   const onLoad = () => {
     onResize();
     window.addEventListener("resize", onResize);
