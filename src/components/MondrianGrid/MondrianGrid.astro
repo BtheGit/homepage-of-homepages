@@ -148,7 +148,7 @@ const { links } = Astro.props;
     blankPercentage: 0.3,
   });
 
-  const theme = themes.get("pastel_pink_gradient")!;
+  const theme = themes.get("synthwave")!;
 
   const shapeDimensions = {
     default: {
@@ -188,22 +188,27 @@ const { links } = Astro.props;
     },
   };
 
-  const blinker = (nonLinkCells: HTMLElement[]) => {
-    const count = Math.ceil(Math.random() * 25);
+  const blinkerConfig = {
+    maxCount: 25,
+    maxAnimationLength: 3,
+    frequency: 500,
+  };
+
+  const blinker = (cells: HTMLElement[]) => {
+    const count = Math.ceil(Math.random() * blinkerConfig.maxCount);
     for (let i = 0; i < count; i++) {
-      const randomCell =
-        nonLinkCells[Math.floor(nonLinkCells.length * Math.random())];
-      randomCell.style.setProperty(
+      const cell = cells[Math.floor(cells.length * Math.random())];
+      cell.style.setProperty(
         "animation",
-        `${Math.ceil(Math.random() * 3)}s blink`
+        `${Math.ceil(Math.random() * blinkerConfig.maxAnimationLength)}s blink`
       );
-      randomCell.addEventListener("animationend", () => {
-        randomCell.style.removeProperty("animation");
+      cell.addEventListener("animationend", () => {
+        cell.style.removeProperty("animation");
       });
     }
     setTimeout(() => {
-      blinker(nonLinkCells);
-    }, Math.random() * 500);
+      blinker(cells);
+    }, Math.random() * blinkerConfig.frequency);
   };
 
   const onResize = () => {
