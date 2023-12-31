@@ -335,7 +335,7 @@ const { embeds } = Astro.props;
       randColor =
         Math.random() > 1 - theme.blankPercentage ? theme.baseColor : randColor;
 
-      newCell.style.setProperty("border", `${borderWidth}px solid black`);
+      newCell.style.setProperty("border", `${borderWidth}px solid white`);
       newCell.style.setProperty("--background-color", randColor);
       newCell.classList.add("mondrian-cell");
       newCell.classList.add(shape);
