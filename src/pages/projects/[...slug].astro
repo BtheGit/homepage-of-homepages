@@ -42,7 +42,9 @@ const { Content } = await project.render();
         <img src={project.data.image!} alt="Splash image" />
         <h1>{project.data.title}</h1>
       </div>
-      <Content />
+      <div class="md-container">
+        <Content />
+      </div>
     </main>
   </body>
 </html>
@@ -161,6 +163,30 @@ const { Content } = await project.render();
     word-break: break-word;
   }
 
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  ul {
+    list-style-type: circle;
+    padding-left: 20px;
+  }
+
+  .md-container {
+    margin-top: -100px;
+    z-index: 1;
+    line-height: 20px;
+  }
+
+  .md-container li {
+    margin-bottom: 0.5rem;
+  }
+
+  .md-container > * {
+    margin-bottom: 2rem;
+  }
+
   @container (min-width: 900px) {
     img {
       grid-column: content-start / halfway;
@@ -174,12 +200,7 @@ const { Content } = await project.render();
     }
   }
 
-  .content-grid > * + * {
+  /* .content-grid > * + * {
     margin-top: var(--flow-spacing, 1em);
-  }
-
-  .splash + * {
-    margin-top: -100px;
-    z-index: 1;
-  }
+  } */
 </style>
