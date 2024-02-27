@@ -27,6 +27,12 @@ const { Content } = await project.render();
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Cutive&family=Josefin+Sans:wght@300&display=swap"
+      rel="stylesheet"
+    />
     <title>Brendan Beltz Projects: {project.data.title}</title>
   </head>
   <body>
@@ -43,9 +49,19 @@ const { Content } = await project.render();
 
 <!-- Unfortunately, looks like the rendered content is not inserted into the template before the css scoping is applied, so it needs to be global -->
 <style is:global define:vars={{ primaryThemeColor, secondaryThemeColor }}>
+  :root {
+    font-family:
+      Josefin Sans,
+      -apple-system,
+      BlinkMacSystemFont,
+      Segoe UI,
+      Roboto,
+      sans-serif;
+  }
   header {
     height: 40px;
     width: 100%;
+
     background: var(--primaryThemeColor);
   }
 
@@ -139,6 +155,7 @@ const { Content } = await project.render();
   h1 {
     font-size: 4rem;
     font-weight: 900;
+    font-family: var(--default-font-family);
     color: var(--secondaryThemeColor);
     grid-column: content;
     word-break: break-word;
