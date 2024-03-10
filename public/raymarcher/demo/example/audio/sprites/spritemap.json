@@ -1,0 +1,11 @@
+{
+  "src": ["/public/raymarcher/demo/example/audio/sprites/spritemap.mp3"],
+  "sprite": {
+    "disco_2": [0, 204068.57142857142],
+    "looping_groaning": [206000, 14520.000000000011],
+    "pbjtime1": [222000, 1990.000000000009],
+    "ragtime_piano_2": [225000, 258429.38775510204],
+    "swoosh1": [485000, 572.6984126984007],
+    "swoosh2": [487000, 1487.5056689342614]
+  }
+}

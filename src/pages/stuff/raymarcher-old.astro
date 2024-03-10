@@ -1,0 +1,63 @@
+---
+
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<!-- https://css-tricks.com/how-to-load-fonts-in-a-way-that-fights-fout-and-makes-lighthouse-happy/ -->
+		<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Cutive" rel="stylesheet">
+		<title>Brendan Beltz: A Web Developing Brendan Of All Time</title>
+	</head>
+	<body>
+		<main>
+      <canvas id="display-main"></canvas>
+      <script>
+        import WorldEngine from 'raymarcher';
+        import defaultWad from '../../components/Raymarcher/data/default.wad.ts'
+        const width = document.documentElement.clientWidth;
+        const height = document.documentElement.clientHeight;
+        WorldEngine({width, height, framerate: (1000 / 60)})(defaultWad)
+      </script>
+		</main>
+	</body>
+</html>
+
+<style>
+	html, body, main, canvas {
+		height: 100%;
+		width: 100%;
+    margin: 0;
+    padding: 0;
+	}
+
+	body {
+		background: black;
+	}
+
+	main {
+		background: none;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.profile-name {
+		display: block;
+		color: white;
+		font-family: 'Bangers', cursive;
+		font-size: 10vmax;
+		padding: 0 8vw;
+		text-align: center;
+		text-shadow: 0 0 3px black;
+		filter: drop-shadow(0 0 10px rgba(0,0,0,1)) drop-shadow(0 0 20px rgba(0,0,0,.4));
+		/* filter: drop-shadow(0 0 10px rgba(0,0,0,1)); */
+	}
+
+	
+</style>
