@@ -1,5 +1,5 @@
 {
-  "src": ["/public/raymarcher/demo/example/audio/sprites/spritemap.mp3"],
+  "src": ["/raymarcher/demo/example/audio/sprites/spritemap.mp3"],
   "sprite": {
     "disco_2": [0, 204068.57142857142],
     "looping_groaning": [206000, 14520.000000000011],

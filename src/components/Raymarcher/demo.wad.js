@@ -1,18 +1,18 @@
-import audioSpritemap from "/public/raymarcher/demo/example/audio/sprites/spritemap.json" assert { type: "json" };
-import SpriteScientist from "/public/raymarcher/demo/example/images/sprites/scientist.json" assert { type: "json" };
-import SpriteTree_1 from "/public/raymarcher/demo/example/images/sprites/tree_1.json" assert { type: "json" };
-import BananaMan from "/public/raymarcher/demo/example/images/sprites/banana.json" assert { type: "json" };
-import BlueCrystal from "/public/raymarcher/demo/example/images/sprites/blue_crystal.json" assert { type: "json" };
-import PurpleBall from "/public/raymarcher/demo/example/images/sprites/purple_ball.json" assert { type: "json" };
-import MagicShot from "/public/raymarcher/demo/example/images/sprites/magic_shot.json" assert { type: "json" };
-import GreenFlame from "/public/raymarcher/demo/example/images/sprites/green_flame.json" assert { type: "json" };
-import KoopaTroopa from "/public/raymarcher/demo/example/images/sprites/koopa_troopa.json" assert { type: "json" };
-import AnimatedWater1 from "/public/raymarcher/demo/example/images/sprites/animated_water_1.json" assert { type: "json" };
-import MagicHands from "/public/raymarcher/demo/example/images/sprites/magic_hands.json" assert { type: "json" };
-import MagicDust from "/public/raymarcher/demo/example/images/sprites/magic_dust.json" assert { type: "json" };
-import Bat from "/public/raymarcher/demo/example/images/sprites/bat_1.json" assert { type: "json" };
-import Pickups1 from "/public/raymarcher/demo/example/images/sprites/pickups_1.json" assert { type: "json" };
-import MusicPlayers from "/public/raymarcher/demo/example/images/sprites/music_players.json" assert { type: "json" };
+import audioSpritemap from "./audio/sprites/spritemap.json" assert { type: "json" };
+import SpriteScientist from "./images/sprites/scientist.json" assert { type: "json" };
+import SpriteTree_1 from "./images/sprites/tree_1.json" assert { type: "json" };
+import BananaMan from "./images/sprites/banana.json" assert { type: "json" };
+import BlueCrystal from "./images/sprites/blue_crystal.json" assert { type: "json" };
+import PurpleBall from "./images/sprites/purple_ball.json" assert { type: "json" };
+import MagicShot from "./images/sprites/magic_shot.json" assert { type: "json" };
+import GreenFlame from "./images/sprites/green_flame.json" assert { type: "json" };
+import KoopaTroopa from "./images/sprites/koopa_troopa.json" assert { type: "json" };
+import AnimatedWater1 from "./images/sprites/animated_water_1.json" assert { type: "json" };
+import MagicHands from "./images/sprites/magic_hands.json" assert { type: "json" };
+import MagicDust from "./images/sprites/magic_dust.json" assert { type: "json" };
+import Bat from "./images/sprites/bat_1.json" assert { type: "json" };
+import Pickups1 from "./images/sprites/pickups_1.json" assert { type: "json" };
+import MusicPlayers from "./images/sprites/music_players.json" assert { type: "json" };
 
 // We can explore preprocessing these files so the full gridCell objects don't have to be built, instead a function perhaps.
 
@@ -41,15 +41,15 @@ import MusicPlayers from "/public/raymarcher/demo/example/images/sprites/music_p
 const sounds = {};
 
 const textures = {
-  background__clouds1: "/public/raymarcher/demo/example/images/textures/background__clouds1.jpg",
+  background__clouds1: "/raymarcher/demo/example/images/textures/background__clouds1.jpg",
   background__holographic_twilight_hills_sm:
-    "/public/raymarcher/demo/example/images/textures/background__holographic_twilight_hills_sm.jpg",
-  grass1: "/public/raymarcher/demo/example/images/textures/retro_texture_pack_9/GRASS_1A.png",
-  light_brick1: "/public/raymarcher/demo/example/images/textures/light_brick1_sm.jpg",
-  dots1: "/public/raymarcher/demo/example/images/textures/dots1_sm.jpg",
-  lava: "/public/raymarcher/demo/example/images/textures/lava.png",
-  sparkle: "/public/raymarcher/demo/example/images/textures/sparkle.png",
-  brick_grass_edge: "/public/raymarcher/demo/example/images/textures/retro_texture_pack_9/BRICK_3C.png",
+    "/raymarcher/demo/example/images/textures/background__holographic_twilight_hills_sm.jpg",
+  grass1: "/raymarcher/demo/example/images/textures/retro_texture_pack_9/GRASS_1A.png",
+  light_brick1: "/raymarcher/demo/example/images/textures/light_brick1_sm.jpg",
+  dots1: "/raymarcher/demo/example/images/textures/dots1_sm.jpg",
+  lava: "/raymarcher/demo/example/images/textures/lava.png",
+  sparkle: "/raymarcher/demo/example/images/textures/sparkle.png",
+  brick_grass_edge: "/raymarcher/demo/example/images/textures/retro_texture_pack_9/BRICK_3C.png",
 };
 
 const spriteDatas = [
@@ -76,7 +76,7 @@ const spriteDatas = [
 
 // Add spritesheets to textures (maybe we can just make this a texture again)
 for (const spriteData of spriteDatas) {
-  textures[spriteData.meta.name] = `/public/raymarcher/demo/example/images/sprites/${spriteData.meta.image}`;
+  textures[spriteData.meta.name] = `/raymarcher/demo/example/images/sprites/${spriteData.meta.image}`;
 }
 
 const animations = [

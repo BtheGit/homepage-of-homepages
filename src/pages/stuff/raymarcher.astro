@@ -20,9 +20,9 @@
   <body>
     <main>
       <canvas id="raymarcher-display"></canvas>
-      <script type="module">
-        import wad from "/public/raymarcher/demo/example/demo.wad.js";
-        import engine from "/public/raymarcher/demo/dist/raymarcher.mjs";
+      <script>
+        import wad from "../../components/Raymarcher/demo.wad.js";
+        import engine from "../../components/Raymarcher/raymarcher.js";
 
         document.addEventListener("DOMContentLoaded", () => {
           // Testing out to see how full screen looks. Needs optimization by a factor of 4x
