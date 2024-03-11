@@ -5,12 +5,6 @@ url_live: "https://chromewebstore.google.com/detail/annotated-geoguessr/mkagpkkh
 image: "/projectIcons/annotated-geoguessr.png"
 ---
 
-Lorem ipsom dolor sit amet consectetur adipiscing elit. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl.
+[Google Chrome Store Link](https://chromewebstore.google.com/detail/annotated-geoguessr/mkagpkkhobnkdkecdmfgoglfppcdhcbn)
 
-Lorem ipsom dolor sit amet consectetur adipiscing elit. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl. Sed euismod, diam eget aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae nisl.
-
-## Features
-
-- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Description forthcoming.
