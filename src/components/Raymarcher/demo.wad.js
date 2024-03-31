@@ -1833,6 +1833,236 @@ const map_1 = {
     {
       transform: {
         position: {
+          x: 3,
+          y: 7,
+        },
+        rotation: 0,
+
+        height: 64,
+        elevation: 32,
+      },
+      bobbingMovement: {
+        amplitude: 3,
+        frequency: 0.5,
+        initialElevation: 32,
+      },
+      actor: "Book",
+      interactionDirectives: [
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "Parallel lines have so much in common.",
+        },
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "It's a shame they'll never meet.",
+        },
+      ],
+      initialState: "state__idle",
+      states: [
+        {
+          name: "state__idle",
+          animation: "scroll__idle",
+        },
+      ],
+      collider: {
+        type: "aabb",
+        width: 0.15,
+        height: 0.8,
+        solid: false,
+      },
+      collisionLayer: {
+        layer: "PickupItem",
+      },
+    },
+    {
+      transform: {
+        position: {
+          x: 8,
+          y: 6,
+        },
+        rotation: 0,
+
+        height: 64,
+        elevation: 32,
+      },
+      bobbingMovement: {
+        amplitude: 3,
+        frequency: 0.5,
+        initialElevation: 32,
+      },
+      actor: "Book",
+      interactionDirectives: [
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "A physicist sees a young man about \n to jump off the Empire State Building.",
+        },
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "He yells, \" Don't do it! \n You have so much potential!\".",
+        },
+      ],
+      initialState: "state__idle",
+      states: [
+        {
+          name: "state__idle",
+          animation: "scroll__idle",
+        },
+      ],
+      collider: {
+        type: "aabb",
+        width: 0.15,
+        height: 0.8,
+        solid: false,
+      },
+      collisionLayer: {
+        layer: "PickupItem",
+      },
+    },
+    {
+      transform: {
+        position: {
+          x: 3,
+          y: 4,
+        },
+        rotation: 0,
+
+        height: 64,
+        elevation: 32,
+      },
+      bobbingMovement: {
+        amplitude: 3,
+        frequency: 0.5,
+        initialElevation: 32,
+      },
+      actor: "Book",
+      interactionDirectives: [
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "I took the shell off my racing snail, \n thinking it would make him run \n faster.",
+        },
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "If anything, \n it made him more sluggish.",
+        },
+      ],
+      initialState: "state__idle",
+      states: [
+        {
+          name: "state__idle",
+          animation: "scroll__idle",
+        },
+      ],
+      collider: {
+        type: "aabb",
+        width: 0.15,
+        height: 0.8,
+        solid: false,
+      },
+      collisionLayer: {
+        layer: "PickupItem",
+      },
+    },
+    {
+      transform: {
+        position: {
+          x: 15,
+          y: 8,
+        },
+        rotation: 0,
+
+        height: 64,
+        elevation: 32,
+      },
+      bobbingMovement: {
+        amplitude: 3,
+        frequency: 0.5,
+        initialElevation: 32,
+      },
+      actor: "Book",
+      interactionDirectives: [
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "My wife told me I was being immature.",
+        },
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "I told her to get out of my fort!",
+        },
+      ],
+      initialState: "state__idle",
+      states: [
+        {
+          name: "state__idle",
+          animation: "scroll__idle",
+        },
+      ],
+      collider: {
+        type: "aabb",
+        width: 0.15,
+        height: 0.8,
+        solid: false,
+      },
+      collisionLayer: {
+        layer: "PickupItem",
+      },
+    },
+    {
+      transform: {
+        position: {
+          x: 12,
+          y: 12,
+        },
+        rotation: 0,
+
+        height: 64,
+        elevation: 32,
+      },
+      bobbingMovement: {
+        amplitude: 3,
+        frequency: 0.5,
+        initialElevation: 32,
+      },
+      actor: "Book",
+      interactionDirectives: [
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "Why do cows wear bells?",
+        },
+        {
+          type: "ShowMessage",
+          priority: 5,
+          body: "Because their horns don't work.",
+        },
+      ],
+      initialState: "state__idle",
+      states: [
+        {
+          name: "state__idle",
+          animation: "scroll__idle",
+        },
+      ],
+      collider: {
+        type: "aabb",
+        width: 0.15,
+        height: 0.8,
+        solid: false,
+      },
+      collisionLayer: {
+        layer: "PickupItem",
+      },
+    },
+    {
+      transform: {
+        position: {
           x: 10,
           y: 10,
         },
